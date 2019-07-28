@@ -28,4 +28,15 @@ class AdminUser extends Model
     protected $hidden = [
         'password',
     ];
+
+
+    public function role()
+    {
+
+    }
+
+    public function permission()
+    {
+        return $this->hasMany(AdminUserPermission::class,'user_id','id');
+    }
 }

@@ -23,13 +23,19 @@ CREATE TABLE `admin_menu` (
 -- ----------------------------
 -- Records of admin_menu
 -- ----------------------------
-INSERT INTO `admin_menu` VALUES ('1', '0', '1', 'Index', 'fa-bar-chart', '/', '', 0, 0);
-INSERT INTO `admin_menu` VALUES ('2', '0', '2', 'Admin', 'fa-tasks', '', '', 0, 0);
-INSERT INTO `admin_menu` VALUES ('3', '2', '3', 'Users', 'fa-users', 'auth/users', '', 0, 0);
-INSERT INTO `admin_menu` VALUES ('4', '2', '4', 'Roles', 'fa-user', 'auth/roles', '', 0, 0);
-INSERT INTO `admin_menu` VALUES ('5', '2', '5', 'Permission', 'fa-ban', 'auth/permissions', '', 0, 0);
+INSERT INTO `admin_menu` VALUES ('1', '0', '1', 'Index', 'layui-icon-home', '/', '', 0, 0);
+INSERT INTO `admin_menu` VALUES ('2', '0', '2', 'Admin', 'layui-icon-set', '', '', 0, 0);
+INSERT INTO `admin_menu` VALUES ('3', '2', '3', 'Users', 'layui-icon-set', 'auth/users', '', 0, 0);
+INSERT INTO `admin_menu` VALUES ('4', '2', '4', 'Roles', 'layui-icon-set', 'auth/roles', '', 0, 0);
+INSERT INTO `admin_menu` VALUES ('5', '2', '5', 'Permission', 'layui-icon-set', 'auth/permissions', '', 0, 0);
 INSERT INTO `admin_menu` VALUES ('6', '2', '6', 'Menu', 'fa-bars', 'auth/menu', '', 0, 0);
 INSERT INTO `admin_menu` VALUES ('7', '2', '7', 'Operation log', 'fa-history', 'auth/logs', '', 0, 0);
+INSERT INTO `admin_menu` VALUES ('8', '0', '8', '目录深度测试', 'layui-icon-senior', '', '', 0, 0);
+INSERT INTO `admin_menu` VALUES ('9', '8', '9', '目录深度测试-1', 'layui-icon-senior', '', '', 0, 0);
+INSERT INTO `admin_menu` VALUES ('10', '8', '10', '目录深度测试-1', 'layui-icon-senior', '/', '', 0, 0);
+INSERT INTO `admin_menu` VALUES ('11', '9', '11', '目录深度测试-2', 'layui-icon-senior', '', '', 0, 0);
+INSERT INTO `admin_menu` VALUES ('11', '8', '12', '目录深度测试-2', 'layui-icon-senior', '/', '', 0, 0);
+INSERT INTO `admin_menu` VALUES ('12', '11', '13', '目录深度测试-3', 'layui-icon-senior', '/', '', 0, 0);
 
 -- ----------------------------
 -- Table structure for admin_operation_log
@@ -102,8 +108,8 @@ INSERT INTO `admin_role_permissions` VALUES ('1', '1', 0, 0);
 -- ----------------------------
 -- Table structure for admin_role_users
 -- ----------------------------
-DROP TABLE IF EXISTS `admin_role_users`;
-CREATE TABLE `admin_role_users` (
+DROP TABLE IF EXISTS `admin_user_roles`;
+CREATE TABLE `admin_user_roles` (
   `role_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `created_at` int NOT NULL DEFAULT 0,
@@ -114,7 +120,7 @@ CREATE TABLE `admin_role_users` (
 -- ----------------------------
 -- Records of admin_role_users
 -- ----------------------------
-INSERT INTO `admin_role_users` VALUES ('1', '1', 0, 0);
+INSERT INTO `admin_user_roles` VALUES ('1', '1', 0, 0);
 
 
 -- ----------------------------

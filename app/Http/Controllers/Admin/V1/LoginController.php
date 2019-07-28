@@ -29,6 +29,6 @@ class LoginController extends BaseController {
 
         $token = $userService->RefreshToken($user);
 
-        return admin_success(['access_token'=>$token,'id'=>$user->id]);
+        return admin_success(['access_token'=>$token,'user_id'=>$user->id]);
     }
 }

@@ -24,9 +24,11 @@ $router->group([
     $router->post('test', 'AppController@test');                            //测试
 
     #登录注册
-    $router->post('login/signin', 'LoginController@signin');                 //登陆
+    $router->post('login/signin', 'LoginController@signin');                //登陆
 
 
+
+    $router->post('auth/menu', 'IndexController@getMenu');                  //获取用户菜单
 //    $router->group(['middleware' => 'auth.api.login'], function() use ($router) {
 //        #我的
 //        $router->post('user/get_member_info', 'UserController@getMemberInfo');      //获取会员基本信息
