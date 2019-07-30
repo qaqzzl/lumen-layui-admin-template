@@ -16,7 +16,7 @@ class AdminUserRole extends Model {
 
 
     /**
-     * Get the role associated with the user.
+     * Get the role associated with the user. 一对一关联
      */
     public function role()
     {

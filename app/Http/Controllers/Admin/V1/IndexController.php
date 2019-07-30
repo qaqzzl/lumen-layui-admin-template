@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Admin\V1;
 
 
 use App\Http\Controllers\Admin\Service\AuthService;
+use App\Models\AdminUser;
 use Illuminate\Http\Request;
 
 class IndexController extends BaseController {
@@ -17,9 +18,8 @@ class IndexController extends BaseController {
     /**
      * 获取用户菜单
     */
-    public function getMenu(Request $request, AuthService $authService)
+    public function getMenu(Request $request, AdminUser $adminUser)
     {
-
-        $authService->GetMenu($request->user_id);
+        $adminUser::GetMenu($request->user_id);
     }
 }

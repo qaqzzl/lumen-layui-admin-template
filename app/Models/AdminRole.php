@@ -13,4 +13,13 @@ class AdminRole extends Model {
 
 
     protected $dateFormat = 'U';
+
+    protected $guarded = [];
+
+
+    //一对多关联
+    public function role_permission()
+    {
+        return $this->hasMany(AdminRolePermission::class, 'role_id','id');
+    }
 }
