@@ -30,7 +30,8 @@ $app = new Laravel\Lumen\Application(
 
 
 //config
-$app->configure('admin_code');
+$app->configure('admin_code');      //后台接口状态码
+$app->configure('admin');           //后台配置
 
 /*
 |--------------------------------------------------------------------------

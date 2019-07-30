@@ -82,6 +82,19 @@ class AdminUser extends Model
         } else {
             $menu = AdminMenu::where()->get();
         }
-        dump($menu);
+        $menu = getChildren($menu);
+        return $menu;
     }
+}
+
+function getChildren ($data, $pid=0) {
+    $arr = array();
+    foreach ($data as $vo) {
+        if ($vo->parent_id == $pid) {
+            $vo->children = getChildren($data,$vo->id);
+            $vo->uri = config('admin.domain_path').$vo->uri;
+            $arr[] = $vo;
+        }
+    }
+    return $arr;
 }

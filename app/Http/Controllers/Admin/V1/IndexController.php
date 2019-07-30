@@ -20,6 +20,7 @@ class IndexController extends BaseController {
     */
     public function getMenu(Request $request, AdminUser $adminUser)
     {
-        $adminUser::GetMenu($request->user_id);
+        $menu = $adminUser::GetMenu($request->user_id);
+        return admin_success(['menu'=>$menu]);
     }
 }
