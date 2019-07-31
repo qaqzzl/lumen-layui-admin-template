@@ -69,9 +69,11 @@ $app->singleton(
 //     App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
-// $app->routeMiddleware([
+ $app->routeMiddleware([
 //     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+     'auth.admin.login' => App\Http\Middleware\AuthAdminLoginMiddleware::class,                 //后台登陆授权
+     'verify.admin.permission'=> \App\Http\Middleware\VerifyAdminPermissionMiddleware::class,   //后台权限验证
+ ]);
 
 /*
 |--------------------------------------------------------------------------

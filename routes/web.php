@@ -28,10 +28,13 @@ $router->group([
 
 
 
-    $router->post('auth/menu', 'IndexController@getMenu');                  //获取用户菜单
-//    $router->group(['middleware' => 'auth.api.login'], function() use ($router) {
-//        #我的
-//        $router->post('user/get_member_info', 'UserController@getMemberInfo');      //获取会员基本信息
-//        $router->post('user/update_member_info', 'UserController@updateMemberInfo');      //更新会员基本信息
-//    });
+
+    $router->group(['middleware' => 'auth.admin.login'], function() use ($router) {
+        $router->post('auth/menu', 'IndexController@getMenu');                              //获取用户菜单
+
+        //权限验证
+        $router->group(['middleware'=>'verify.admin.permission'], function() use ($router) {
+
+        });
+    });
 });

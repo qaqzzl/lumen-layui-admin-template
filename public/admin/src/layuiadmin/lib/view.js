@@ -48,10 +48,19 @@ layui.define(['laytpl', 'layer'], function(exports){
 			,remove: true
 		});
 		
-		//跳转到登入页
-		//location.hash = '/user/login';
 		callback && callback();
+		
+		//跳转到登入页
+		// location.hash = '/user/login';
+		// window.location.href="user/login";
+		location.href = 'user/login.html';
 	};
+	
+	//权限不足
+	view.permission = function(callback) {
+		
+		callback && callback();
+	}
 	
 	//Ajax请求
 	view.req = function(options){
@@ -115,6 +124,7 @@ layui.define(['laytpl', 'layer'], function(exports){
 				
 				//登录状态失效，清除本地 access_token，并强制跳转到登入页
 				else if(res[response.statusName] == statusCode.logout){
+					console.log("跳转登陆")
 					view.exit();
 				}
 				
