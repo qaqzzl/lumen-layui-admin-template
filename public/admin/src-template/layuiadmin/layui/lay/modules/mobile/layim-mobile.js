@@ -229,7 +229,7 @@ layui.define(['laytpl', 'upload-mobile', 'layer-mobile', 'zepto'], function(expo
           ,'{{# } }}">'
             ,listTpl({
               type: "friend"
-              ,item: "item.list"
+              ,item: "list"
               ,index: "index"
             })
           ,'</ul>'

@@ -44,7 +44,8 @@ layui.define(['laytpl', 'layer'], function(exports){
 	view.exit = function(callback){
 		//清空本地记录的 token
 		layui.data(setter.tableName, {
-			key: setter.request.tokenName
+			key: setter.request.tokenName,
+			key: setter.request.idName
 			,remove: true
 		});
 		
@@ -58,8 +59,13 @@ layui.define(['laytpl', 'layer'], function(exports){
 	
 	//权限不足
 	view.permission = function(callback) {
-		
 		callback && callback();
+		url = 'common/permission.html'
+		if(top.layui.index){
+			top.layui.index.openTabsPage(url,'权限不足')
+		}else{
+			window.open(url)
+		}
 	}
 	
 	//Ajax请求
@@ -124,8 +130,10 @@ layui.define(['laytpl', 'layer'], function(exports){
 				
 				//登录状态失效，清除本地 access_token，并强制跳转到登入页
 				else if(res[response.statusName] == statusCode.logout){
-					console.log("跳转登陆")
 					view.exit();
+				}
+				else if (res[response.statusName] == statusCode.permission) {
+					view.permission();
 				}
 				
 				//其它异常

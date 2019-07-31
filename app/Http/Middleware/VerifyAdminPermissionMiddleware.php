@@ -15,8 +15,9 @@ class VerifyAdminPermissionMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, AuthService $authService)
+    public function handle($request, Closure $next)
     {
+        $authService = new AuthService;
         if ($authService->VerifyPermissions()) {
             // 在这里可以定制你想要的返回格式, 亦或者是 JSON 编码格式
             return $next($request);

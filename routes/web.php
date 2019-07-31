@@ -30,11 +30,11 @@ $router->group([
 
 
     $router->group(['middleware' => 'auth.admin.login'], function() use ($router) {
-        $router->post('auth/menu', 'IndexController@getMenu');                              //获取用户菜单
+        $router->post('auth/menu', 'IndexController@getMenu');                                  //获取用户菜单
 
         //权限验证
         $router->group(['middleware'=>'verify.admin.permission'], function() use ($router) {
-
+            $router->post('auth/admin.user', 'AuthController@adminUserList');                    //管理员列表
         });
     });
 });

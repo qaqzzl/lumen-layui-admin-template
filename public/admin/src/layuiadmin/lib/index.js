@@ -74,9 +74,7 @@ layui.extend({
                 url: layui.setter.api_domain + 'auth/menu' //实际使用请改成服务端真实接口
                 ,done: function(res){
                     menu = res.data.menu
-                    console.log(menu)
                     menuHtml = createMenuHtml(menu)
-                    console.log(menuHtml)
                     $('#LAY-system-side-menu').html(menuHtml)
                     var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
                     element.init();

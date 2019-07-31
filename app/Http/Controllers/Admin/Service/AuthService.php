@@ -16,6 +16,6 @@ class AuthService {
     //验证用户权限
     public function VerifyPermissions()
     {
-        return false;
+        return true;
     }
 }
