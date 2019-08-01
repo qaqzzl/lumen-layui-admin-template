@@ -34,9 +34,8 @@ layui.define(['table', 'form'], function(exports){
             ,{field: 'avatar', title: '头像', templet:'avatarTpl'}
             ,{field: 'account', title: '登录名'}
             ,{field: 'nickname', title: '昵称'}
-            // ,{field: 'role', title: '角色'}
+            ,{field: 'user_role', title: '角色', toolbar: '#table-role' }
             ,{field: 'created_at', title: '加入时间', sort: true}
-            // ,{field: 'check', title:'审核状态', templet: '#buttonTpl', minWidth: 80, align: 'center'}
             ,{title: '操作', width: 150, align: 'center', fixed: 'right', toolbar: '#table-operating'}
         ]]
         ,text: '对不起，加载出现异常！'
@@ -63,14 +62,14 @@ layui.define(['table', 'form'], function(exports){
             layer.open({
                 type: 2
                 ,title: '编辑管理员'
-                ,content: '../../../views/user/administrators/adminform.html'
-                ,area: ['420px', '420px']
+                ,content: '../../../views/auth/user/edit.html'
+                ,maxmin: true
+                ,area: ['500px', '350px']
                 ,btn: ['确定', '取消']
                 ,yes: function(index, layero){
                     var iframeWindow = window['layui-layer-iframe'+ index]
-                        ,submitID = 'LAY-user-back-submit'
+                        ,submitID = 'LAY-submit'
                         ,submit = layero.find('iframe').contents().find('#'+ submitID);
-                    
                     //监听提交
                     iframeWindow.layui.form.on('submit('+ submitID +')', function(data){
                         var field = data.field; //获取提交的字段

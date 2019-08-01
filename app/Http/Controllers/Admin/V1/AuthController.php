@@ -24,7 +24,13 @@ class AuthController extends BaseController {
     public function adminUserList(Request $request)
     {
         $limit = $request->input('limit',10);
-        $info = AdminUser::paginate($limit);
+        //with(['user_role:id', 'user_role.role:id,name','slug'])
+        $info = AdminUser::with(['user_role'=>function($query){
+            $query->select('user_id','role_id');
+            $query->with(['role' => function ($query) {
+                return $query->select('id','name','slug');
+            }]);
+        }])->paginate($limit);
         return admin_success($info);
     }
 }

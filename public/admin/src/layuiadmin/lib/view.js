@@ -54,7 +54,7 @@ layui.define(['laytpl', 'layer'], function(exports){
 		//跳转到登入页
 		// location.hash = '/user/login';
 		// window.location.href="user/login";
-		location.href = 'user/login.html';
+		location.href = 'auth/login.html';
 	};
 	
 	//权限不足
