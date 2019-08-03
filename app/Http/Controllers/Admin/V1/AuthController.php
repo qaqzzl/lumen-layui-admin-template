@@ -33,4 +33,40 @@ class AuthController extends BaseController {
         }])->paginate($limit);
         return admin_success($info);
     }
+
+    /**
+     * 修改管理员信息
+    */
+    public function adminUserSave(Request $request)
+    {
+        $data = $this->validate($request,[
+            'id'=>'required',
+            'nickname' => 'required',
+        ],[
+            'nickname.required' => '请填上你的大名'
+        ]);
+
+        if (AdminUser::where('id',$request->id)->update($data)) {
+            return admin_success();
+        }
+        return admin_error(5000);
+    }
+
+    /**
+     * 创建管理员
+     */
+    public function adminUserCreate(Request $request)
+    {
+        $data = $this->validate($request,[
+            'id'=>'required',
+            'nickname' => 'required',
+        ],[
+            'nickname.required' => '请填上你的大名'
+        ]);
+
+        if (AdminUser::where('id',$request->id)->update($data)) {
+            return admin_success();
+        }
+        return admin_error(5000);
+    }
 }

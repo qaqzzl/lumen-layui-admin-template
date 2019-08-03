@@ -152,9 +152,15 @@
                             var field = data.field; //获取提交的字段
                             
                             //提交 Ajax 成功后，静态更新表格中的数据
-                            //$.ajax({});
-                            table.reload('LAY-user-front-submit'); //数据刷新
-                            layer.close(index); //关闭弹层
+                            admin.req({
+                                url: layui.setter.api_domain + 'auth/admin.user.save' //实际使用请改成服务端真实接口
+                                ,done: function(res){
+                                    console.log(res)
+                                    table.reload(submitID); //数据刷新
+                                    layer.close(index);     //关闭弹层
+                                }
+                            });
+                            
                         });
                         
                         submit.trigger('click');

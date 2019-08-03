@@ -112,13 +112,14 @@ layui.define(['laytpl', 'layer'], function(exports){
 				?  options.headers[request.idName]
 				: (layui.data(setter.tableName)[request.idName] || '');
 		}
-		
+		options.data = JSON.stringify(options.data)
 		delete options.success;
 		delete options.error;
 		
 		return $.ajax($.extend({
 			type: 'POST'
 			,dataType: 'json'
+			,contentType:'application/json;charset=UTF-8'
 			,success: function(res){
 				layer.close(index_loading);
 				var statusCode = response.statusCode;

@@ -11,7 +11,12 @@
 layui.define(['table', 'form'], function(exports){
     var $ = layui.$
         ,table = layui.table
-        ,form = layui.form;
+        ,form = layui.form
+        ,admin = layui.admin
+    var tableloading = layui.layer.open({
+        type:3
+        ,offset: 't'
+    });
     
     //管理员管理
     table.render({
@@ -38,12 +43,15 @@ layui.define(['table', 'form'], function(exports){
             ,{field: 'created_at', title: '加入时间', sort: true}
             ,{title: '操作', width: 150, align: 'center', fixed: 'right', toolbar: '#table-operating'}
         ]]
+        ,done: function() {
+            layui.layer.close(tableloading)
+        }
         ,text: '对不起，加载出现异常！'
     });
     
     //监听工具条
     table.on('tool(LAY-list)', function(obj){
-        var data = obj.data;
+        var infodata = obj.data;
         if(obj.event === 'del'){
             layer.prompt({
                 formType: 1
@@ -57,13 +65,11 @@ layui.define(['table', 'form'], function(exports){
                 });
             });
         }else if(obj.event === 'edit'){
-            var tr = $(obj.tr);
-            
             layer.open({
                 type: 2
                 ,title: '编辑管理员'
                 ,content: '../../../views/auth/user/edit.html'
-                ,maxmin: true
+                // ,maxmin: true
                 ,area: ['500px', '350px']
                 ,btn: ['确定', '取消']
                 ,yes: function(index, layero){
@@ -73,17 +79,31 @@ layui.define(['table', 'form'], function(exports){
                     //监听提交
                     iframeWindow.layui.form.on('submit('+ submitID +')', function(data){
                         var field = data.field; //获取提交的字段
-                        
                         //提交 Ajax 成功后，静态更新表格中的数据
-                        //$.ajax({});
-                        table.reload('LAY-user-front-submit'); //数据刷新
-                        layer.close(index); //关闭弹层
+                        admin.req({
+                            url: layui.setter.api_domain + 'auth/admin.user.save' //实际使用请改成服务端真实接口
+                            ,data:field
+                            ,done: function(res){
+                                table.reload('LAY-list'); //数据刷新
+                                layer.close(index); //关闭弹层
+                            }
+                        });
+
                     });
                     
                     submit.trigger('click');
                 }
                 ,success: function(layero, index){
-                
+                    var body=layer.getChildFrame('body',index);
+                    body.find("input[name=id]").val(infodata.id);
+                    body.find("input[name=nickname]").val(infodata.nickname);
+                    body.find("input[name=avatar]").val(infodata.avatar);
+                    //元素更新必须使用,否则没有效果,在子页面进行render()渲染。
+                },
+                cancel: function(index, layero){
+                    console.log(index)
+                    //关闭按钮进行刷新，否则下一个，无法进行渲染。
+                    // $('#searchId').click();
                 }
             })
         }

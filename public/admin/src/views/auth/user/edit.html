@@ -22,7 +22,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">头像</label>
         <div class="layui-input-inline">
-            <input type="text" name="avatar" lay-verify="required" placeholder="请上传图片" autocomplete="off" class="layui-input" >
+            <input type="text" name="avatar" placeholder="请上传图片" autocomplete="off" class="layui-input" >
         </div>
         <button style="float: left;" type="button" class="layui-btn" id="layuiadmin-upload">上传图片</button>
     </div>
@@ -33,7 +33,8 @@
         </div>
     </div>
     <div class="layui-form-item layui-hide">
-        <input type="button" lay-submit lay-filter="LAY-user-front-submit" id="LAY-submit" value="确认">
+        <input type="hidden" name="id" value="">
+        <input type="button" lay-submit lay-filter="LAY-submit" id="LAY-submit" value="确认">
     </div>
 </div>
 
@@ -48,6 +49,7 @@
             ,form = layui.form
             ,upload = layui.upload ;
     
+        form.render();
         upload.render({
             elem: '#layuiadmin-upload'
             ,url: layui.setter.base + 'json/upload/demo.js'
