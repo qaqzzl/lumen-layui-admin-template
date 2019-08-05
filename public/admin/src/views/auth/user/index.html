@@ -92,6 +92,8 @@
         index: 'lib/index' //主入口模块
     }).use(['index', 'auth_user', 'table'], function(){
         var $ = layui.$
+            ,admin = layui.admin
+            ,api_list = layui.setter.api_list
             ,form = layui.form
             ,table = layui.table;
         
@@ -114,33 +116,31 @@
                 if(checkData.length === 0){
                     return layer.msg('请选择数据');
                 }
-                
-                layer.prompt({
-                    formType: 1
-                    ,title: '敏感操作，请验证口令'
-                }, function(value, index){
-                    layer.close(index);
-                    
-                    layer.confirm('确定删除吗？', function(index) {
-                        
-                        //执行 Ajax 后重载
-                        /*
-                        admin.req({
-                          url: 'xxx'
-                          //,……
-                        });
-                        */
-                        table.reload('LAY-list');
-                        layer.msg('已删除');
+                var ids = []
+                $.each(checkData,function(key,vo){
+                    ids[key] = vo.id
+                });
+    
+                layer.confirm('确定删除吗？', function(index) {
+        
+                    //执行 Ajax 后重载
+                    admin.req({
+                        url: layui.setter.api_domain + api_list.AdminUserDel
+                        ,data: {ids:ids}
+                        ,done: function(res){
+                            table.reload('LAY-list');
+                            layer.msg('已删除');
+                        }
                     });
+                   
                 });
             }
             ,add: function(){
                 layer.open({
                     type: 2
                     ,title: '添加管理员'
-                    ,content: 'adminform.html'
-                    ,area: ['420px', '420px']
+                    ,content: 'add.html'
+                    ,area: ['500px', '350px']
                     ,btn: ['确定', '取消']
                     ,yes: function(index, layero){
                         var iframeWindow = window['layui-layer-iframe'+ index]
@@ -153,7 +153,8 @@
                             
                             //提交 Ajax 成功后，静态更新表格中的数据
                             admin.req({
-                                url: layui.setter.api_domain + 'auth/admin.user.save' //实际使用请改成服务端真实接口
+                                url: layui.setter.api_domain + api_list.AdminUserAdd
+                                ,data:field
                                 ,done: function(res){
                                     console.log(res)
                                     table.reload(submitID); //数据刷新

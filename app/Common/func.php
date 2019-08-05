@@ -7,7 +7,7 @@
  */
 
 
-function admin_success($data = [], $code=0, $msg = '')
+function admin_success($data = [], $msg = '', $code=0)
 {
     if (empty($data)) $data = (object)[];
     if ($msg == '') {

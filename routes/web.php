@@ -34,8 +34,11 @@ $router->group([
 
         //权限验证
         $router->group(['middleware'=>'verify.admin.permission'], function() use ($router) {
-            $router->post('auth/admin.user', 'AuthController@adminUserList');                    //管理员列表
+            $router->post('auth/admin.user.list', 'AuthController@adminUserList');               //管理员列表
+            $router->post('auth/admin.user.create', 'AuthController@adminUserCreate');           //管理员添加
             $router->post('auth/admin.user.save', 'AuthController@adminUserSave');               //管理员修改
+            $router->post('auth/admin.user.delete', 'AuthController@adminUserDelete');           //管理员删除
+
         });
     });
 });

@@ -16,35 +16,30 @@
     <div class="layui-form-item">
         <label class="layui-form-label">登录名</label>
         <div class="layui-input-inline">
-            <input type="text" name="loginname" lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+            <input type="text" name="account" lay-verify="required" placeholder="请输入账号" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">手机</label>
+        <label class="layui-form-label">昵称</label>
         <div class="layui-input-inline">
-            <input type="text" name="phone" lay-verify="phone" placeholder="请输入号码" autocomplete="off" class="layui-input">
+            <input type="text" name="nickname" lay-verify="required" placeholder="请输入昵称" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">邮箱</label>
+        <label class="layui-form-label">头像</label>
         <div class="layui-input-inline">
-            <input type="text" name="email" lay-verify="email" placeholder="请输入邮箱" autocomplete="off" class="layui-input">
+            <input type="text" name="avatar" placeholder="请上传图片" autocomplete="off" class="layui-input" >
         </div>
+        <button style="float: left;" type="button" class="layui-btn" id="layuiadmin-upload">上传图片</button>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">角色</label>
+        <label class="layui-form-label">密码</label>
         <div class="layui-input-inline">
-            <input type="text" name="role" lay-verify="required" placeholder="请输入角色类型" autocomplete="off" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">审核状态</label>
-        <div class="layui-input-inline">
-            <input type="checkbox" lay-filter="switch" name="switch" lay-skin="switch" lay-text="通过|待审核">
+            <input type="password" name="password" lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item layui-hide">
-        <input type="button" lay-submit lay-filter="LAY-user-front-submit" id="LAY-submit" value="确认">
+        <input type="button" lay-submit lay-filter="LAY-submit" id="LAY-submit" value="确认">
     </div>
 </div>
 
@@ -54,10 +49,22 @@
         base: '../../../layuiadmin/' //静态资源所在路径
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use(['index', 'form'], function(){
+    }).use(['index', 'form', 'upload'], function(){
         var $ = layui.$
-            ,form = layui.form ;
-        
+            ,form = layui.form
+            ,upload = layui.upload ;
+    
+        form.render();
+        upload.render({
+            elem: '#layuiadmin-upload'
+            ,url: layui.setter.base + 'json/upload/demo.js'
+            ,accept: 'images'
+            ,method: 'get'
+            ,acceptMime: 'image/*'
+            ,done: function(res){
+                $(this.item).prev("div").children("input").val(res.data.src)
+            }
+        });
         
     })
 </script>

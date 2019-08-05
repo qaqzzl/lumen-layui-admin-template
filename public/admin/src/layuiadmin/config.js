@@ -11,6 +11,15 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function(exports){
     exports('setter', {
         container: 'LAY_app' //容器ID
         ,api_domain: 'http://192.168.189.128:8080/admin/v1/'
+        
+        //接口列表
+        ,api_list: {
+            AdminUserList: 'auth/admin.user.list',          //管理员列表
+            AdminUserAdd: 'auth/admin.user.create',         //管理员添加
+            AdminUserSave: 'auth/admin.user.save',          //管理员修改
+            AdminUserDel: 'auth/admin.user.delete',         //管理员删除
+        }
+    
     
         ,base: layui.cache.base //记录静态资源所在路径
         ,views: layui.cache.base + 'tpl/' //动态模板所在目录

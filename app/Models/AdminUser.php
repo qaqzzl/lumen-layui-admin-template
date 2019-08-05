@@ -17,7 +17,7 @@ class AdminUser extends Model
      * @var array
      */
     protected $fillable = [
-        'account', 'nickname', 'avatar'
+        'account', 'nickname', 'avatar', 'password'
     ];
 
     /**
@@ -28,6 +28,18 @@ class AdminUser extends Model
     protected $hidden = [
         'password', 'access_token'
     ];
+
+    public function getAvatarAttributes($value)
+    {
+        if (empty($value))
+            $this->attributes['avatar'] = '';
+    }
+
+    public function setPasswordAttribute($value)
+    {
+        if ($value)
+        $this->attributes['password'] = md5($value);
+    }
 
 
     public function user_role()

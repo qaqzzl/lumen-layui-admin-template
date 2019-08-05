@@ -13,7 +13,8 @@ layui.define(['table', 'form'], function(exports){
         ,table = layui.table
         ,form = layui.form
         ,admin = layui.admin
-    var tableloading = layui.layer.open({
+        ,api_list = layui.setter.api_list
+    var tableloading = layui.layer.open({       //表格第一次加载动画
         type:3
         ,offset: 't'
     });
@@ -23,7 +24,7 @@ layui.define(['table', 'form'], function(exports){
         elem: '#LAY-list'
         ,page:true
         ,loading:true
-        ,url: layui.setter.api_domain + 'auth/admin.user'
+        ,url: layui.setter.api_domain + api_list.AdminUserList
         ,method:'post'
         ,parseData: function(res){ //res 即为原始返回的数据 , 解决后台数据不匹配问题
             return {
@@ -44,7 +45,7 @@ layui.define(['table', 'form'], function(exports){
             ,{title: '操作', width: 150, align: 'center', fixed: 'right', toolbar: '#table-operating'}
         ]]
         ,done: function() {
-            layui.layer.close(tableloading)
+            layui.layer.close(tableloading) ////表格第一次加载动画关闭
         }
         ,text: '对不起，加载出现异常！'
     });
@@ -53,16 +54,16 @@ layui.define(['table', 'form'], function(exports){
     table.on('tool(LAY-list)', function(obj){
         var infodata = obj.data;
         if(obj.event === 'del'){
-            layer.prompt({
-                formType: 1
-                ,title: '敏感操作，请验证口令'
-            }, function(value, index){
-                layer.close(index);
-                layer.confirm('确定删除此管理员？', function(index){
-                    console.log(obj)
-                    obj.del();
-                    layer.close(index);
+            layer.confirm('确定删除此管理员？', function(index){
+                admin.req({
+                    url: layui.setter.api_domain + api_list.AdminUserDel
+                    ,data:{ids:[obj.data.id]}
+                    ,done: function(res){
+                        obj.del();
+                        layer.close(index);
+                    }
                 });
+
             });
         }else if(obj.event === 'edit'){
             layer.open({
@@ -81,7 +82,7 @@ layui.define(['table', 'form'], function(exports){
                         var field = data.field; //获取提交的字段
                         //提交 Ajax 成功后，静态更新表格中的数据
                         admin.req({
-                            url: layui.setter.api_domain + 'auth/admin.user.save' //实际使用请改成服务端真实接口
+                            url: layui.setter.api_domain + api_list.AdminUserSave
                             ,data:field
                             ,done: function(res){
                                 table.reload('LAY-list'); //数据刷新
@@ -101,7 +102,6 @@ layui.define(['table', 'form'], function(exports){
                     //元素更新必须使用,否则没有效果,在子页面进行render()渲染。
                 },
                 cancel: function(index, layero){
-                    console.log(index)
                     //关闭按钮进行刷新，否则下一个，无法进行渲染。
                     // $('#searchId').click();
                 }

@@ -58,13 +58,29 @@ class AuthController extends BaseController {
     public function adminUserCreate(Request $request)
     {
         $data = $this->validate($request,[
-            'id'=>'required',
-            'nickname' => 'required',
+            'account'=>'required',
+            'password'=>'required',
+            'nickname'=>'required',
+            'avatar'=>'',
         ],[
             'nickname.required' => '请填上你的大名'
         ]);
+        if (AdminUser::create($data)) {
+            return admin_success();
+        }
+        return admin_error(5000);
+    }
 
-        if (AdminUser::where('id',$request->id)->update($data)) {
+    /**
+     * 删除管理员
+    */
+    public function adminUserDelete(Request $request)
+    {
+        $ids = array_flip($request->ids);
+        unset($ids[1]);
+        $ids = array_flip($ids);
+//        $ids = array_values($ids);
+        if (AdminUser::whereIn('id',$ids)->delete()) {
             return admin_success();
         }
         return admin_error(5000);
