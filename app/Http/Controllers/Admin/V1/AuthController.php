@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Admin\V1;
 
 
+use App\Models\AdminRole;
 use App\Models\AdminUser;
 use Illuminate\Http\Request;
 
@@ -91,5 +92,28 @@ class AuthController extends BaseController {
             return admin_success();
         }
         return admin_error(5000);
+    }
+
+    /**
+     * 角色列表
+    */
+    public function adminRoleList(Request $request)
+    {
+        $limit = $request->input('limit',10);
+        //with(['user_role:id', 'user_role.role:id,name','slug'])
+        $adminRole = AdminRole::with(['role_permission'=>function($query){
+            $query->select('role_id','permission_id');
+            $query->with(['permission' => function ($query) {
+                return $query->select('id','name','slug');
+            }]);
+        }]);
+        //搜索
+        if (!empty($request->name))
+            $adminRole->where('slug','like','%'.$request->slug.'%');
+        if (!empty($request->slug))
+            $adminRole->where('slug','like','%'.$request->slug.'%');
+
+        $info = $adminRole->paginate($limit);
+        return admin_success($info);
     }
 }
