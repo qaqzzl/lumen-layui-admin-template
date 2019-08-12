@@ -12,6 +12,7 @@ namespace App\Http\Controllers\Admin\V1;
 use App\Models\AdminPermission;
 use App\Models\AdminRole;
 use App\Models\AdminUser;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class AuthController extends BaseController {
@@ -27,17 +28,31 @@ class AuthController extends BaseController {
     {
         $limit = $request->input('limit',10);
         //with(['user_role:id', 'user_role.role:id,name','slug'])
-        $adminUser = AdminUser::with(['user_role'=>function($query){
+        $adminUser = AdminUser::with(['user_role'=>function($query) {
             $query->select('user_id','role_id');
             $query->with(['role' => function ($query) {
-                return $query->select('id','name','slug');
+                $query->select('id','name','slug');
             }]);
         }]);
+
         //搜索
-        if (!empty($request->account))
+        if (!empty($request->account))  //账号
             $adminUser->where('account','like',$request->account.'%');
-        if (!empty($request->nickname))
+        if (!empty($request->nickname)) //昵称
             $adminUser->where('nickname','like',$request->nickname.'%');
+        if (!empty($request->role)) {   //角色
+            $adminUser->whereHas('user_role', function ($query) use($request) {
+                $query->where('role_id', $request->role);
+            });
+        }
+        if (!empty($request->permission)) { //权限
+            $adminUser->orWhereHas('user_permission', function ($query) use($request) {
+                $query->where('permission_id', $request->permission);
+            });
+            $adminUser->orWhereHas('user_role.role_permission', function ($query) use($request) {
+                $query->where('permission_id', $request->permission);
+            });
+        }
 
         $info = $adminUser->paginate($limit);
         return admin_success($info);

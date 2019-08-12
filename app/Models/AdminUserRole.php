@@ -22,4 +22,9 @@ class AdminUserRole extends Model {
     {
         return $this->hasOne(AdminRole::class,'id','role_id');
     }
+
+    public function role_permission()
+    {
+        return $this->hasMany(AdminRolePermission::class, 'role_id','role_id');
+    }
 }

@@ -31,15 +31,17 @@
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">角色</label>
-                    <div class="layui-input-block">
-                        <select name="role">
-                            <option value="0">管理员</option>
-                            <option value="1">超级管理员</option>
-                            <option value="2">纠错员</option>
-                            <option value="3">采购员</option>
-                            <option value="4">推销员</option>
-                            <option value="5">运营人员</option>
-                            <option value="6">编辑</option>
+                    <div class="layui-input-inline">
+                        <select name="role" lay-search="">
+                            <option value="">直接选择或搜索选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">权限</label>
+                    <div class="layui-input-inline">
+                        <select name="permission" lay-search="">
+                            <option value="">直接选择或搜索选择</option>
                         </select>
                     </div>
                 </div>
@@ -172,6 +174,31 @@
         $('.layui-btn.layuiadmin-btn-admin').on('click', function(){
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
+        });
+        
+        //加载角色搜索 search
+        admin.req({
+            url: layui.setter.api_domain + api_list.AdminRoleList
+            ,data: {limit:1000}
+            ,done: function(result){
+                var list = result.data.data
+                $.each(list,function (key,vo) {
+                    $('select[name=role]').append('<option value="'+vo.id+'">'+vo.name+'</option>');
+                })
+                form.render();
+            }
+        });
+        //加载权限搜索 search
+        admin.req({
+            url: layui.setter.api_domain + api_list.AdminPermissionList
+            ,data: {limit:1000}
+            ,done: function(result){
+                var list = result.data.data
+                $.each(list,function (key,vo) {
+                    $('select[name=permission]').append('<option value="'+vo.id+'">'+vo.name+'</option>');
+                })
+                form.render();
+            }
         });
     });
 </script>
