@@ -35,15 +35,20 @@ $router->group([
         //权限验证
         $router->group(['middleware'=>'verify.admin.permission'], function() use ($router) {
             #auth
-            $router->post('auth/admin.user.list', 'AuthController@adminUserList');               //管理员列表
-            $router->post('auth/admin.user.create', 'AuthController@adminUserCreate');           //管理员添加
-            $router->post('auth/admin.user.save', 'AuthController@adminUserSave');               //管理员修改
-            $router->post('auth/admin.user.delete', 'AuthController@adminUserDelete');           //管理员删除
+            $router->post('auth/admin.user.list', 'AuthController@adminUserList');                           //管理员列表
+            $router->post('auth/admin.user.create', 'AuthController@adminUserCreate');                       //管理员添加
+            $router->post('auth/admin.user.save', 'AuthController@adminUserSave');                           //管理员修改
+            $router->post('auth/admin.user.delete', 'AuthController@adminUserDelete');                       //管理员删除
 
-            $router->post('auth/admin.role.list', 'AuthController@adminRoleList');               //角色列表
-            $router->post('auth/admin.role.create', 'AuthController@adminRoleCreate');           //角色添加
-            $router->post('auth/admin.role.save', 'AuthController@adminRoleSave');               //角色修改
-            $router->post('auth/admin.role.delete', 'AuthController@adminRoleDelete');           //角色删除
+            $router->post('auth/admin.role.list', 'AuthController@adminRoleList');                           //管理员角色列表
+            $router->post('auth/admin.role.create', 'AuthController@adminRoleCreate');                       //管理员角色添加
+            $router->post('auth/admin.role.save', 'AuthController@adminRoleSave');                           //管理员角色修改
+            $router->post('auth/admin.role.delete', 'AuthController@adminRoleDelete');                       //管理员角色删除
+
+            $router->post('auth/admin.permission.list', 'AuthController@adminPermissionList');               //管理员权限列表
+            $router->post('auth/admin.permission.create', 'AuthController@adminPermissionCreate');           //管理员权限添加
+            $router->post('auth/admin.permission.save', 'AuthController@adminPermissionSave');               //管理员权限修改
+            $router->post('auth/admin.permission.delete', 'AuthController@adminPermissionDelete');           //管理员权限删除
         });
     });
 });

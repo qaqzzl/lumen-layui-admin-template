@@ -14,14 +14,20 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function(exports){
         
         //接口列表
         ,api_list: {
-            AdminUserList: 'auth/admin.user.list',          //管理员列表
-            AdminUserAdd: 'auth/admin.user.create',         //管理员添加
-            AdminUserSave: 'auth/admin.user.save',          //管理员修改
-            AdminUserDel: 'auth/admin.user.delete',         //管理员删除
-            AdminRoleList: 'auth/admin.role.list',          //管理员角色列表
-            AdminRoleAdd: 'auth/admin.role.create',         //管理员角色添加
-            AdminRoleSave: 'auth/admin.role.save',          //管理员角色修改
-            AdminRoleDel: 'auth/admin.role.delete',         //管理员角色删除
+            AdminUserList: 'auth/admin.user.list',                      //管理员列表
+            AdminUserAdd: 'auth/admin.user.create',                     //管理员添加
+            AdminUserSave: 'auth/admin.user.save',                      //管理员修改
+            AdminUserDel: 'auth/admin.user.delete',                     //管理员删除
+            
+            AdminRoleList: 'auth/admin.role.list',                      //管理员角色列表
+            AdminRoleAdd: 'auth/admin.role.create',                     //管理员角色添加
+            AdminRoleSave: 'auth/admin.role.save',                      //管理员角色修改
+            AdminRoleDel: 'auth/admin.role.delete',                     //管理员角色删除
+            
+            AdminPermissionList: 'auth/admin.permission.list',          //管理员权限列表
+            AdminPermissionAdd: 'auth/admin.permission.create',         //管理员权限添加
+            AdminPermissionSave: 'auth/admin.permission.save',          //管理员权限修改
+            AdminPermissionDel: 'auth/admin.permission.delete',         //管理员权限删除
         }
     
     
