@@ -81,6 +81,16 @@ layui.extend({
                 }
             });
         }
+        ,getQueryVariable = function (variable)
+        {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i=0;i<vars.length;i++) {
+                var pair = vars[i].split("=");
+                if(pair[0] == variable){return pair[1];}
+            }
+            return(false);
+        }
     
     //初始
     if(admin.screen() < 2) admin.sideFlexible();
@@ -164,6 +174,7 @@ layui.extend({
     exports('index', {
         openTabsPage: openTabsPage,
         //获取用户菜单 , 需要这样写 ， 外部才能调用
-        _menu:_menu
+        _menu:_menu,
+        getQueryVariable:getQueryVariable
     });
 });

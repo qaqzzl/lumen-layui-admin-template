@@ -8,16 +8,13 @@
  */
 
 
-layui.define(['table', 'form'], function(exports){
+layui.define(['table', 'form', 'transfer'], function(exports){
     var $ = layui.$
         ,table = layui.table
         ,form = layui.form
+        ,transfer = layui.transfer
         ,admin = layui.admin
         ,api_list = layui.setter.api_list
-    var tableloading = layui.layer.open({       //表格第一次加载动画
-        type:3
-        ,offset: 't'
-    });
     
     //管理员管理
     table.render({
@@ -42,10 +39,10 @@ layui.define(['table', 'form'], function(exports){
             ,{field: 'nickname', title: '昵称'}
             ,{field: 'user_role', title: '角色', toolbar: '#table-role' }
             ,{field: 'created_at', title: '加入时间', sort: true}
-            ,{title: '操作', width: 150, align: 'center', fixed: 'right', toolbar: '#table-operating'}
+            ,{title: '操作', width: 250, align: 'center', fixed: 'right', toolbar: '#table-operating'}
         ]]
         ,done: function() {
-            layui.layer.close(tableloading) ////表格第一次加载动画关闭
+
         }
         ,text: '对不起，加载出现异常！'
     });
@@ -65,7 +62,7 @@ layui.define(['table', 'form'], function(exports){
                 });
 
             });
-        }else if(obj.event === 'edit'){
+        } else if(obj.event === 'edit'){
             layer.open({
                 type: 2
                 ,title: '编辑管理员'
@@ -104,6 +101,33 @@ layui.define(['table', 'form'], function(exports){
                 cancel: function(index, layero){
                     //关闭按钮进行刷新，否则下一个，无法进行渲染。
                     // $('#searchId').click();
+                }
+            })
+        } else if(obj.event === 'user_role'){
+            layer.open({
+                type: 2
+                ,title: '编辑管理员角色'
+                ,content: '../../../views/auth/user/user_role.html?user_role='+encodeURIComponent(JSON.stringify(infodata.user_role))
+                // ,maxmin: true
+                ,area: ['550px', '500px']
+                ,btn: ['确定', '取消']
+                ,yes: function(index, layero){
+                    var iframeWindow = window['layui-layer-iframe'+ index]
+                        ,submitID = 'LAY-submit'
+                        ,submit = layero.find('iframe').contents().find('#'+ submitID);
+                    var getData = iframeWindow.layui.transfer.getData('user_role'); //获取右侧数据
+                    layui.layer.alert(JSON.stringify(getData));
+        
+                    // admin.req({
+                    //     url: layui.setter.api_domain + api_list.AdminUserSave
+                    //     ,data:field
+                    //     ,done: function(res){
+                    //         table.reload('LAY-list'); //数据刷新
+                    //         layer.close(index); //关闭弹层
+                    //     }
+                    // });
+                    //
+                    submit.trigger('click');
                 }
             })
         }

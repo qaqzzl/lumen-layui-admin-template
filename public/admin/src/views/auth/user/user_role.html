@@ -1,0 +1,76 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layuiAdmin 管理员 iframe 框</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+</head>
+<body>
+
+<div class="layui-form" lay-filter="layuiadmin-form-admin" id="layuiadmin-form-admin" style="padding: 20px 30px 0 30px;">
+    <div id="user_role" class="demo-transfer"></div>
+</div>
+<script src="../../../layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'transfer', 'util'], function(){
+        var $ = layui.$
+            ,transfer = layui.transfer
+            ,layer = layui.layer
+            ,admin = layui.admin
+            ,util = layui.util;
+    
+        //用户权限数据, 通过上级页面传递的 url 参数获取
+        user_role_data = layui.index.getQueryVariable('user_role')
+        user_role_data = JSON.parse(decodeURIComponent(user_role_data))
+        var user_role_data_ids = []
+        $.each(user_role_data, function (key, vo) {
+            user_role_data_ids[key] = vo.role_id
+        })
+        
+        admin.req({
+            url: layui.setter.api_domain + layui.setter.api_list.AdminRoleList
+            ,data:{limit:9999}
+            ,done: function(res){
+                var role_data = res.data.data
+                role_transfer(role_data)
+            }
+        });
+
+        function role_transfer(data) {
+            transfer.render({
+                elem: '#user_role'
+                ,title: ['角色列表', '已选角色']  //自定义标题
+                ,value: user_role_data_ids //初始右侧数据
+                ,showSearch: true   //显示搜索框
+                //,width: 150 //定义宽度
+                // ,height: 210 //定义高度
+                ,id: 'user_role' //定义唯一索引
+                ,data: data
+                ,parseData: function(res){  //自定义数据格式
+                    return {
+                        "value": res.id //数据值
+                        ,"title": res.name //数据标题
+                        // ,"disabled": res.disabled  //是否禁用
+                        // ,"checked": res.checked //是否选中
+                    }
+                }
+                ,onchange: function(obj, index){
+                    var arr = ['左边', '右边'];
+                    layer.alert('来自 <strong>'+ arr[index] + '</strong> 的数据：'+ JSON.stringify(obj)); //获得被穿梭时的数据
+                }
+            })
+        }
+
+    })
+</script>
+</body>
+</html>
