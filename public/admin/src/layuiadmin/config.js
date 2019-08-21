@@ -14,11 +14,13 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function(exports){
         
         //接口列表
         ,api_list: {
-            AdminUserList: 'auth/admin.user.list',                      //管理员列表
-            AdminUserAdd: 'auth/admin.user.create',                     //管理员添加
-            AdminUserSave: 'auth/admin.user.save',                      //管理员修改
-            AdminUserDel: 'auth/admin.user.delete',                     //管理员删除
-            
+            AdminUserList: 'auth/admin.user.list',                      //管理员用户列表
+            AdminUserAdd: 'auth/admin.user.create',                     //管理员用户添加
+            AdminUserSave: 'auth/admin.user.save',                      //管理员用户修改
+            AdminUserDel: 'auth/admin.user.delete',                     //管理员用户删除
+            AdminUserRoleSave: 'auth/admin.user.role.save',             //管理员用户角色修改
+        
+        
             AdminRoleList: 'auth/admin.role.list',                      //管理员角色列表
             AdminRoleAdd: 'auth/admin.role.create',                     //管理员角色添加
             AdminRoleSave: 'auth/admin.role.save',                      //管理员角色修改

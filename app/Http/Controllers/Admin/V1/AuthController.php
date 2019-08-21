@@ -19,7 +19,7 @@ class AuthController extends BaseController {
 
 
     /**
-     * 获取管理员列表
+     * 管理员用户 - 列表
      * @param int $page
      * @param int $limit
      * @return json $info
@@ -59,7 +59,7 @@ class AuthController extends BaseController {
     }
 
     /**
-     * 修改管理员信息
+     * 管理员用户 - 修改
     */
     public function adminUserSave(Request $request)
     {
@@ -77,7 +77,7 @@ class AuthController extends BaseController {
     }
 
     /**
-     * 创建管理员
+     * 管理员用户 - 创建
      */
     public function adminUserCreate(Request $request)
     {
@@ -96,7 +96,7 @@ class AuthController extends BaseController {
     }
 
     /**
-     * 删除管理员
+     * 管理员用户 - 删除
     */
     public function adminUserDelete(Request $request)
     {
@@ -111,7 +111,15 @@ class AuthController extends BaseController {
     }
 
     /**
-     * 管理员角色列表
+     * 管理员用户 - 修改角色
+    */
+    public function adminUserRoleSave(Request $request)
+    {
+
+    }
+
+    /**
+     * 管理员角色 - 列表
     */
     public function adminRoleList(Request $request)
     {

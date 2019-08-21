@@ -119,7 +119,7 @@ layui.define(['table', 'form', 'transfer'], function(exports){
                     layui.layer.alert(JSON.stringify(getData));
         
                     // admin.req({
-                    //     url: layui.setter.api_domain + api_list.AdminUserSave
+                    //     url: layui.setter.api_domain + api_list.AdminUserRoleSave
                     //     ,data:field
                     //     ,done: function(res){
                     //         table.reload('LAY-list'); //数据刷新
