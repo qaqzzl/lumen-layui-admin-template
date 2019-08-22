@@ -103,7 +103,7 @@ layui.define(['table', 'form', 'transfer'], function(exports){
                     // $('#searchId').click();
                 }
             })
-        } else if(obj.event === 'user_role'){
+        } else if(obj.event === 'user_role'){       //管理员用户角色修改
             layer.open({
                 type: 2
                 ,title: '编辑管理员角色'
@@ -116,18 +116,22 @@ layui.define(['table', 'form', 'transfer'], function(exports){
                         ,submitID = 'LAY-submit'
                         ,submit = layero.find('iframe').contents().find('#'+ submitID);
                     var getData = iframeWindow.layui.transfer.getData('user_role'); //获取右侧数据
-                    layui.layer.alert(JSON.stringify(getData));
-        
-                    // admin.req({
-                    //     url: layui.setter.api_domain + api_list.AdminUserRoleSave
-                    //     ,data:field
-                    //     ,done: function(res){
-                    //         table.reload('LAY-list'); //数据刷新
-                    //         layer.close(index); //关闭弹层
-                    //     }
-                    // });
-                    //
-                    submit.trigger('click');
+                    var field = []
+                    $.each(getData,function(key,vo){
+                        field[key] = {
+                            role_id:vo.value,
+                        }
+                    });
+                    admin.req({
+                        url: layui.setter.api_domain + api_list.AdminUserRoleSave
+                        ,data:{role_user_id:infodata.id,role_list:field}
+                        ,done: function(res){
+                            // table.reload('LAY-list'); //数据刷新
+                            // layer.close(index); //关闭弹层
+                        }
+                    });
+
+                    //submit.trigger('click');
                 }
             })
         }

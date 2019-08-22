@@ -12,6 +12,7 @@ namespace App\Http\Controllers\Admin\V1;
 use App\Models\AdminPermission;
 use App\Models\AdminRole;
 use App\Models\AdminUser;
+use App\Models\AdminUserRole;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
@@ -115,7 +116,17 @@ class AuthController extends BaseController {
     */
     public function adminUserRoleSave(Request $request)
     {
-
+        if (!AdminUserRole::where('user_id',$request->user_id)->detele()) return admin_error(5000);
+        foreach ($request->role_list as $vo) {
+            $userRole[] = [
+                'role_id'=>$vo,
+                'user_id'=>$request->user_id
+            ];
+        }
+        if (AdminUserRole::fill($userRole)->save()) {
+            return admin_success();
+        }
+        return admin_error(5000);
     }
 
     /**

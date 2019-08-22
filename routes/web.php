@@ -39,7 +39,7 @@ $router->group([
             $router->post('auth/admin.user.create', 'AuthController@adminUserCreate');                       //管理员用户添加
             $router->post('auth/admin.user.save', 'AuthController@adminUserSave');                           //管理员用户修改
             $router->post('auth/admin.user.delete', 'AuthController@adminUserDelete');                       //管理员用户删除
-            $router->post('auth/admin.user.role.save', 'AuthController@adminUserRoleSave');                  //管理员用户删除
+            $router->post('auth/admin.user.role.save', 'AuthController@adminUserRoleSave');                  //管理员用户角色修改
 
             $router->post('auth/admin.role.list', 'AuthController@adminRoleList');                           //管理员角色列表
             $router->post('auth/admin.role.create', 'AuthController@adminRoleCreate');                       //管理员角色添加

@@ -10,8 +10,9 @@
 layui.define(['laytpl', 'layer', 'element', 'util'], function(exports){
     exports('setter', {
         container: 'LAY_app' //容器ID
-        ,api_domain: 'http://192.168.189.128:8080/admin/v1/'
-        
+        // ,api_domain: 'http://192.168.189.128:8080/admin/v1/'
+        ,api_domain: 'http://127.0.0.1:83/admin/v1/'
+
         //接口列表
         ,api_list: {
             AdminUserList: 'auth/admin.user.list',                      //管理员用户列表
