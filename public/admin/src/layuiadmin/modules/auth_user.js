@@ -124,14 +124,14 @@ layui.define(['table', 'form', 'transfer'], function(exports){
                     });
                     admin.req({
                         url: layui.setter.api_domain + api_list.AdminUserRoleSave
-                        ,data:{role_user_id:infodata.id,role_list:field}
+                        ,data:{id:infodata.id,role_list:field}
                         ,done: function(res){
-                            // table.reload('LAY-list'); //数据刷新
-                            // layer.close(index); //关闭弹层
+                            table.reload('LAY-list'); //数据刷新
+                            layer.close(index); //关闭弹层
                         }
                     });
 
-                    //submit.trigger('click');
+                    submit.trigger('click');
                 }
             })
         }

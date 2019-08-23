@@ -18,17 +18,18 @@ layui.define(function(exports){
     //公共业务的逻辑处理可以写在此处，切换任何页面都会执行
     //……
     var reqajax = {};
+    var headersajax = {};
     reqajax[setter.request.tokenName] = layui.data(setter.tableName)[setter.request.tokenName] || ''
     reqajax[setter.request.idName] = layui.data(setter.tableName)[setter.request.idName] || ''
+    headersajax[setter.request.tokenName] = layui.data(setter.tableName)[setter.request.tokenName] || ''
+    headersajax[setter.request.idName] = layui.data(setter.tableName)[setter.request.idName] || ''
     $.ajaxSetup( {
         // url: "/index.html" , // 默认URL
         // aysnc: false ,       // 默认同步加载
         type: "POST" ,          // 默认使用POST方式
-        data:reqajax,           //默认添加额外参数
-        // headers: {           // 默认添加请求头
-        //   "Author": "CodePlayer" ,
-        //   "Powered-By": "CodePlayer"
-        // } ,
+        data: reqajax,          //默认添加额外参数
+        headers: headersajax,       // 默认添加请求头
+
     });
     
     

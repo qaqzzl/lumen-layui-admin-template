@@ -116,14 +116,15 @@ class AuthController extends BaseController {
     */
     public function adminUserRoleSave(Request $request)
     {
-        if (!AdminUserRole::where('user_id',$request->user_id)->detele()) return admin_error(5000);
+        if (AdminUserRole::where('user_id',$request->id)->delete() === false) return admin_error(5000);
+        if (empty($request->input('role_list'))) return admin_success();
         foreach ($request->role_list as $vo) {
             $userRole[] = [
-                'role_id'=>$vo,
-                'user_id'=>$request->user_id
+                'role_id'=>$vo['role_id'],
+                'user_id'=>$request->id
             ];
         }
-        if (AdminUserRole::fill($userRole)->save()) {
+        if (AdminUserRole::insert($userRole)) {
             return admin_success();
         }
         return admin_error(5000);

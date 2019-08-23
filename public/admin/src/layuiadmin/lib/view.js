@@ -86,30 +86,31 @@ layui.define(['laytpl', 'layer'], function(exports){
 		
 		options.data = options.data || {};
 		options.headers = options.headers || {};
-		
-		if(request.tokenName){
+
+		if(request.tokenName && request.idName){
 			var sendData = typeof options.data === 'string'
 				? JSON.parse(options.data)
 				: options.data;
-			
-			//自动给参数传入默认 token
-			options.data[request.tokenName] = request.tokenName in sendData
-				?  options.data[request.tokenName]
-				: (layui.data(setter.tableName)[request.tokenName] || '');
-			
+
 			//自动给 Request Headers 传入 token
 			options.headers[request.tokenName] = request.tokenName in options.headers
 				?  options.headers[request.tokenName]
 				: (layui.data(setter.tableName)[request.tokenName] || '');
-			
-			//自动给参数传入默认 id
-			options.data[request.idName] = request.idName in sendData
-				?  options.data[request.idName]
-				: (layui.data(setter.tableName)[request.idName] || '');
-			
+
+
 			//自动给 Request Headers 传入 id
 			options.headers[request.idName] = request.idName in options.headers
 				?  options.headers[request.idName]
+				: (layui.data(setter.tableName)[request.idName] || '');
+
+			//自动给参数传入默认 token
+			options.data[request.tokenName] = request.tokenName in sendData
+				?  options.data[request.tokenName]
+				: (layui.data(setter.tableName)[request.tokenName] || '');
+
+			//自动给参数传入默认 id
+			options.data[request.idName] = request.idName in sendData
+				?  options.data[request.idName]
 				: (layui.data(setter.tableName)[request.idName] || '');
 		}
 		options.data = JSON.stringify(options.data)
