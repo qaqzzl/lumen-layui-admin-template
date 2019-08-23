@@ -17,5 +17,10 @@ class AdminPermission extends Model {
 
     protected $guarded = [];
 
+//    public function setHttpMethodAttribute($value)
+//    {
+//        if (is_array($value))
+//            $this->attributes['http_method'] = implode(',',$value);
+//    }
 
 }

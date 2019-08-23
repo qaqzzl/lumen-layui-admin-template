@@ -38,7 +38,7 @@ class AdminUser extends Model
     public function setPasswordAttribute($value)
     {
         if ($value)
-        $this->attributes['password'] = md5($value);
+            $this->attributes['password'] = md5($value);
     }
 
 //    public function getCreatedAtAttribute($value)

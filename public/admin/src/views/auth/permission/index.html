@@ -18,29 +18,15 @@
         <div class="layui-form layui-card-header layuiadmin-card-header-auto">
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">账号</label>
+                    <label class="layui-form-label">权限名称</label>
                     <div class="layui-input-block">
-                        <input type="text" name="account" placeholder="请输入" autocomplete="off" class="layui-input">
+                        <input type="text" name="name" placeholder="请输入" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">昵称</label>
+                    <label class="layui-form-label">权限别名</label>
                     <div class="layui-input-block">
-                        <input type="text" name="nickname" placeholder="请输入" autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">角色</label>
-                    <div class="layui-input-block">
-                        <select name="role">
-                            <option value="0">管理员</option>
-                            <option value="1">超级管理员</option>
-                            <option value="2">纠错员</option>
-                            <option value="3">采购员</option>
-                            <option value="4">推销员</option>
-                            <option value="5">运营人员</option>
-                            <option value="6">编辑</option>
-                        </select>
+                        <input type="text" name="slug" placeholder="请输入" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -143,7 +129,7 @@
                     type: 2
                     ,title: '添加管理员'
                     ,content: 'add.html'
-                    ,area: ['500px', '350px']
+                    ,area: ['500px', '500px']
                     ,btn: ['确定', '取消']
                     ,yes: function(index, layero){
                         var iframeWindow = window['layui-layer-iframe'+ index]
@@ -153,14 +139,23 @@
                         //监听提交
                         iframeWindow.layui.form.on('submit('+ submitID +')', function(data){
                             var field = data.field; //获取提交的字段
-                            
+
+                            //解决复选框取值问题
+                            var body = layer.getChildFrame('body',index);
+                            var checkboxValue = [];
+                            body.find("input:checkbox[name='http_method']:checked").each(function(key) { // 遍历name=standard的多选框
+                                console.log(key)
+                                checkboxValue[key] = $(this).val();
+                            });
+                            field.http_method = checkboxValue
+                            console.log(field)
                             //提交 Ajax 成功后，静态更新表格中的数据
                             admin.req({
-                                url: layui.setter.api_domain + api_list.AdminUserAdd
+                                url: layui.setter.api_domain + api_list.AdminPermissionAdd
                                 ,data:field
                                 ,done: function(res){
                                     console.log(res)
-                                    table.reload(submitID); //数据刷新
+                                    table.reload('LAY-list'); //数据刷新
                                     layer.close(index);     //关闭弹层
                                 }
                             });

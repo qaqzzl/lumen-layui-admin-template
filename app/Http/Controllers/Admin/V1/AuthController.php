@@ -237,7 +237,7 @@ class AuthController extends BaseController {
 
 
     /**
-     * 管理员权限列表
+     * 管理员权限 - 列表
     */
     public function adminPermissionList(Request $request)
     {
@@ -259,4 +259,23 @@ class AuthController extends BaseController {
 
         return admin_success($info);
     }
+
+    /**
+     * 管理员权限 - 添加
+    */
+    public function adminPermissionCreate(Request $request)
+    {
+        $data = $this->validate($request,[
+            'name'=>'required',
+            'slug'=>'required',
+            'http_method'=>'',
+            'http_path'=>'',
+        ]);
+        $data['http_method'] = implode(',',$data['http_method']);
+        if (AdminPermission::create($data)) {
+            return admin_success();
+        }
+        return admin_error(5000);
+    }
+
 }
