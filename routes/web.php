@@ -32,7 +32,7 @@ $router->group([
     $router->group(['middleware' => 'auth.admin.login'], function() use ($router) {
         $router->post('auth/menu', 'IndexController@getMenu');                                  //获取用户菜单
 
-        //权限验证
+        //权限验证中间件
         $router->group(['middleware'=>'verify.admin.permission'], function() use ($router) {
             #auth
             $router->post('auth/admin.user.list', 'AuthController@adminUserList');                           //管理员用户列表
@@ -41,10 +41,13 @@ $router->group([
             $router->post('auth/admin.user.delete', 'AuthController@adminUserDelete');                       //管理员用户删除
             $router->post('auth/admin.user.role.save', 'AuthController@adminUserRoleSave');                  //管理员用户角色修改
 
+
             $router->post('auth/admin.role.list', 'AuthController@adminRoleList');                           //管理员角色列表
             $router->post('auth/admin.role.create', 'AuthController@adminRoleCreate');                       //管理员角色添加
             $router->post('auth/admin.role.save', 'AuthController@adminRoleSave');                           //管理员角色修改
             $router->post('auth/admin.role.delete', 'AuthController@adminRoleDelete');                       //管理员角色删除
+            $router->post('auth/admin.role.permission.save', 'AuthController@adminRolePermissionSave');      //管理员角色权限修改
+
 
             $router->post('auth/admin.permission.list', 'AuthController@adminPermissionList');               //管理员权限列表
             $router->post('auth/admin.permission.create', 'AuthController@adminPermissionCreate');           //管理员权限添加

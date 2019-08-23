@@ -32,7 +32,7 @@ class AdminUser extends Model
     public function getAvatarAttributes($value)
     {
         if (empty($value))
-            $this->attributes['avatar'] = '';
+            return '';
     }
 
     public function setPasswordAttribute($value)
@@ -40,6 +40,13 @@ class AdminUser extends Model
         if ($value)
         $this->attributes['password'] = md5($value);
     }
+
+//    public function getCreatedAtAttribute($value)
+//    {
+//        return date('Y-m-d H:i:s', $value);
+//    }
+
+
 
 
     public function user_role()

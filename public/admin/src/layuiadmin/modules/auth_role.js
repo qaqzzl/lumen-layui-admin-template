@@ -42,7 +42,7 @@ layui.define(['table', 'form'], function(exports){
             ,{field: 'role_permission', title: '角色权限', toolbar: '#table-permission' }
             ,{field: 'created_at', title: '添加时间', sort: true}
             ,{field: 'updated_at', title: '修改时间', sort: true}
-            ,{title: '操作', width: 150, align: 'center', fixed: 'right', toolbar: '#table-operating'}
+            ,{title: '操作', width: 250, align: 'center', fixed: 'right', toolbar: '#table-operating'}
         ]]
         ,done: function() {
             layui.layer.close(tableloading) ////表格第一次加载动画关闭
@@ -56,7 +56,7 @@ layui.define(['table', 'form'], function(exports){
         if(obj.event === 'del'){
             layer.confirm('确定删除此管理员？', function(index){
                 admin.req({
-                    url: layui.setter.api_domain + api_list.AdminUserDel
+                    url: layui.setter.api_domain + api_list.AdminRoleDel
                     ,data:{ids:[obj.data.id]}
                     ,done: function(res){
                         obj.del();
@@ -69,7 +69,7 @@ layui.define(['table', 'form'], function(exports){
             layer.open({
                 type: 2
                 ,title: '编辑管理员'
-                ,content: '../../../views/auth/user/edit.html'
+                ,content: '../../../views/auth/role/edit.html'
                 // ,maxmin: true
                 ,area: ['500px', '350px']
                 ,btn: ['确定', '取消']
@@ -82,7 +82,7 @@ layui.define(['table', 'form'], function(exports){
                         var field = data.field; //获取提交的字段
                         //提交 Ajax 成功后，静态更新表格中的数据
                         admin.req({
-                            url: layui.setter.api_domain + api_list.AdminUserSave
+                            url: layui.setter.api_domain + api_list.AdminRoleSave
                             ,data:field
                             ,done: function(res){
                                 table.reload('LAY-list'); //数据刷新
@@ -97,13 +97,44 @@ layui.define(['table', 'form'], function(exports){
                 ,success: function(layero, index){
                     var body=layer.getChildFrame('body',index);
                     body.find("input[name=id]").val(infodata.id);
-                    body.find("input[name=nickname]").val(infodata.nickname);
-                    body.find("input[name=avatar]").val(infodata.avatar);
+                    body.find("input[name=name]").val(infodata.name);
+                    body.find("input[name=slug]").val(infodata.slug);
                     //元素更新必须使用,否则没有效果,在子页面进行render()渲染。
                 },
                 cancel: function(index, layero){
                     //关闭按钮进行刷新，否则下一个，无法进行渲染。
                     // $('#searchId').click();
+                }
+            })
+        } else if(obj.event === 'role_permission'){       //管理员用户角色修改
+            layer.open({
+                type: 2
+                ,title: '编辑管理员角色'
+                ,content: '../../../views/auth/role/role_permission.html?role_permission='+encodeURIComponent(JSON.stringify(infodata.role_permission))
+                // ,maxmin: true
+                ,area: ['550px', '500px']
+                ,btn: ['确定', '取消']
+                ,yes: function(index, layero){
+                    var iframeWindow = window['layui-layer-iframe'+ index]
+                        ,submitID = 'LAY-submit'
+                        ,submit = layero.find('iframe').contents().find('#'+ submitID);
+                    var getData = iframeWindow.layui.transfer.getData('role_permission'); //获取右侧数据
+                    var field = []
+                    $.each(getData,function(key,vo){
+                        field[key] = {
+                            permission_id:vo.value,
+                        }
+                    });
+                    admin.req({
+                        url: layui.setter.api_domain + api_list.AdminRolePermissionSave
+                        ,data:{id:infodata.id,permission_list:field}
+                        ,done: function(res){
+                            table.reload('LAY-list'); //数据刷新
+                            layer.close(index); //关闭弹层
+                        }
+                    });
+
+                    submit.trigger('click');
                 }
             })
         }

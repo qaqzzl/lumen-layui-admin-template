@@ -20,41 +20,20 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">角色名称</label>
                     <div class="layui-input-block">
-                        <input type="text" name="account" placeholder="请输入" autocomplete="off" class="layui-input">
+                        <input type="text" name="name" placeholder="请输入" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">角色别名</label>
                     <div class="layui-input-block">
-                        <input type="text" name="nickname" placeholder="请输入" autocomplete="off" class="layui-input">
+                        <input type="text" name="slug" placeholder="请输入" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">权限</label>
                     <div class="layui-input-inline">
-                        <select name="role" lay-verify="required" lay-search="">
+                        <select name="permission" lay-search="">
                             <option value="">直接选择或搜索选择</option>
-                            <option value="1">layer</option>
-                            <option value="2">form</option>
-                            <option value="3">layim</option>
-                            <option value="4">element</option>
-                            <option value="5">laytpl</option>
-                            <option value="6">upload</option>
-                            <option value="7">laydate</option>
-                            <option value="8">laypage</option>
-                            <option value="9">flow</option>
-                            <option value="10">util</option>
-                            <option value="11">code</option>
-                            <option value="12">tree</option>
-                            <option value="13">layedit</option>
-                            <option value="14">nav</option>
-                            <option value="15">tab</option>
-                            <option value="16">table</option>
-                            <option value="17">select</option>
-                            <option value="18">checkbox</option>
-                            <option value="19">switch</option>
-                            <option value="20">radio</option>
-                            
                         </select>
                     </div>
                 </div>
@@ -88,6 +67,9 @@
             </script>
             
             <script type="text/html" id="table-operating">
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="role_permission">
+                    <i class="layui-icon layui-icon-edit"></i>分配权限
+                </a>
                 <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
                 {{#  if(d.id == 1){ }}
                 <a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>删除</a>
@@ -137,10 +119,9 @@
                 });
     
                 layer.confirm('确定删除吗？', function(index) {
-        
                     //执行 Ajax 后重载
                     admin.req({
-                        url: layui.setter.api_domain + api_list.AdminUserDel
+                        url: layui.setter.api_domain + api_list.AdminRoleDel
                         ,data: {ids:ids}
                         ,done: function(res){
                             table.reload('LAY-list');
@@ -165,14 +146,12 @@
                         //监听提交
                         iframeWindow.layui.form.on('submit('+ submitID +')', function(data){
                             var field = data.field; //获取提交的字段
-                            
                             //提交 Ajax 成功后，静态更新表格中的数据
                             admin.req({
-                                url: layui.setter.api_domain + api_list.AdminUserAdd
+                                url: layui.setter.api_domain + api_list.AdminRoleAdd
                                 ,data:field
                                 ,done: function(res){
-                                    console.log(res)
-                                    table.reload(submitID); //数据刷新
+                                    table.reload('LAY-list'); //数据刷新
                                     layer.close(index);     //关闭弹层
                                 }
                             });
@@ -187,6 +166,19 @@
         $('.layui-btn.layuiadmin-btn-admin').on('click', function(){
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
+        });
+
+        //加载权限搜索 search
+        admin.req({
+            url: layui.setter.api_domain + api_list.AdminPermissionList
+            ,data: {limit:1000}
+            ,done: function(result){
+                var list = result.data.data
+                $.each(list,function (key,vo) {
+                    $('select[name=permission]').append('<option value="'+vo.id+'">'+vo.name+'</option>');
+                })
+                form.render();
+            }
         });
     });
 </script>

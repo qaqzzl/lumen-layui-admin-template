@@ -37,7 +37,7 @@ layui.define(['table', 'form', 'transfer'], function(exports){
             ,{field: 'avatar', title: '头像', templet:'avatarTpl'}
             ,{field: 'account', title: '登录名'}
             ,{field: 'nickname', title: '昵称'}
-            ,{field: 'user_role', title: '角色', toolbar: '#table-role' }
+            ,{field: 'user_role', title: '角色', toolbar: '#table-role', align: 'center', width:250}
             ,{field: 'created_at', title: '加入时间', sort: true}
             ,{title: '操作', width: 250, align: 'center', fixed: 'right', toolbar: '#table-operating'}
         ]]

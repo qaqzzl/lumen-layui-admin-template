@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Admin\V1;
 
 use App\Models\AdminPermission;
 use App\Models\AdminRole;
+use App\Models\AdminRolePermission;
 use App\Models\AdminUser;
 use App\Models\AdminUserRole;
 use Illuminate\Database\Eloquent\Builder;
@@ -55,7 +56,11 @@ class AuthController extends BaseController {
             });
         }
 
-        $info = $adminUser->paginate($limit);
+        $info = $adminUser->paginate($limit)->toArray();
+        $info['data'] = array_map(function ($vo) {
+            $vo['created_at'] = date('Y-m-d',$vo['created_at']);
+            return $vo;
+        },$info['data']);
         return admin_success($info);
     }
 
@@ -112,7 +117,7 @@ class AuthController extends BaseController {
     }
 
     /**
-     * 管理员用户 - 修改角色
+     * 管理员用户 - 角色修改
     */
     public function adminUserRoleSave(Request $request)
     {
@@ -136,7 +141,6 @@ class AuthController extends BaseController {
     public function adminRoleList(Request $request)
     {
         $limit = $request->input('limit',10);
-        //with(['user_role:id', 'user_role.role:id,name','slug'])
         $adminRole = AdminRole::with(['role_permission'=>function($query){
             $query->select('role_id','permission_id');
             $query->with(['permission' => function ($query) {
@@ -145,13 +149,92 @@ class AuthController extends BaseController {
         }]);
         //搜索
         if (!empty($request->name))
-            $adminRole->where('slug','like','%'.$request->slug.'%');
+            $adminRole->where('name','like','%'.$request->name.'%');
         if (!empty($request->slug))
             $adminRole->where('slug','like','%'.$request->slug.'%');
+        if (!empty($request->permission)) { //权限
+            $adminRole->WhereHas('role_permission.permission', function ($query) use($request) {
+                $query->where('permission_id', $request->permission);
+            });
+        }
 
-        $info = $adminRole->paginate($limit);
+        $info = $adminRole->paginate($limit)->toArray();
+        $info['data'] = array_map(function ($vo) {
+            $vo['created_at'] = date('Y-m-d',$vo['created_at']);
+            $vo['updated_at'] = date('Y-m-d',$vo['updated_at']);
+            return $vo;
+        },$info['data']);
         return admin_success($info);
     }
+
+    /**
+     * 管理员角色 - 添加
+    */
+    public function adminRoleCreate(Request $request)
+    {
+        $data = $this->validate($request,[
+            'name'=>'required',
+            'slug'=>'required',
+        ],[
+            'name.required' => '请填上角色名称'
+        ]);
+        if (AdminRole::create($data)) {
+            return admin_success();
+        }
+        return admin_error(5000);
+    }
+
+    /**
+     * 管理员角色 - 修改
+    */
+    public function adminRoleSave(Request $request)
+    {
+        $data = $this->validate($request,[
+            'name'=>'required',
+            'slug'=>'required',
+        ],[
+            'name.required' => '请填上角色名称'
+        ]);
+
+        if (AdminRole::where('id',$request->id)->update($data)) {
+            return admin_success();
+        }
+        return admin_error(5000);
+    }
+
+    /**
+     * 管理员角色 - 删除
+    */
+    public function adminRoleDelete(Request $request)
+    {
+        $ids = array_flip($request->ids);
+        unset($ids[1]);
+        $ids = array_flip($ids);
+        if (AdminRole::whereIn('id',$ids)->delete()) {
+            return admin_success();
+        }
+        return admin_error(5000);
+    }
+
+    /**
+     * 管理员角色 - 权限修改
+    */
+    public function adminRolePermissionSave(Request $request)
+    {
+        if (AdminRolePermission::where('role_id',$request->id)->delete() === false) return admin_error(5000);
+        if (empty($request->input('permission_list'))) return admin_success();
+        foreach ($request->permission_list as $vo) {
+            $userRole[] = [
+                'permission_id'=>$vo['permission_id'],
+                'role_id'=>$request->id
+            ];
+        }
+        if (AdminRolePermission::insert($userRole)) {
+            return admin_success();
+        }
+        return admin_error(5000);
+    }
+
 
     /**
      * 管理员权限列表
