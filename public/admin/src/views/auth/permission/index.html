@@ -114,7 +114,7 @@
         
                     //执行 Ajax 后重载
                     admin.req({
-                        url: layui.setter.api_domain + api_list.AdminUserDel
+                        url: layui.setter.api_domain + api_list.AdminPermissionDel
                         ,data: {ids:ids}
                         ,done: function(res){
                             table.reload('LAY-list');
@@ -127,7 +127,7 @@
             ,add: function(){
                 layer.open({
                     type: 2
-                    ,title: '添加管理员'
+                    ,title: '添加权限'
                     ,content: 'add.html'
                     ,area: ['500px', '500px']
                     ,btn: ['确定', '取消']

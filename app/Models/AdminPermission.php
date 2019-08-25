@@ -17,10 +17,25 @@ class AdminPermission extends Model {
 
     protected $guarded = [];
 
+//    public function getDateFormat()
+//    {
+//        return 'Y-m-d H:i:s.u';
+//    }
+
 //    public function setHttpMethodAttribute($value)
 //    {
 //        if (is_array($value))
 //            $this->attributes['http_method'] = implode(',',$value);
 //    }
+
+    public function getHttpMethodAttribute($value)
+    {
+        return explode(',',$value);
+    }
+
+    public function getHttpPathAttribute($value)
+    {
+        return explode("\n",$value);
+    }
 
 }

@@ -14,15 +14,31 @@
 
 <div class="layui-form" lay-filter="layuiadmin-form-admin" id="layuiadmin-form-admin" style="padding: 20px 30px 0 0;">
     <div class="layui-form-item">
-        <label class="layui-form-label">角色名称</label>
+        <label class="layui-form-label"><i style="color: #cc0000">*</i>权限名称</label>
         <div class="layui-input-inline">
-            <input type="text" name="name" lay-verify="required" placeholder="请输入角色名称" autocomplete="off" class="layui-input">
+            <input type="text" name="name" lay-verify="required" placeholder="请输入权限名称" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">角色别名</label>
+        <label class="layui-form-label"><i style="color: #cc0000">*</i>权限别名</label>
         <div class="layui-input-inline">
             <input type="text" name="slug" lay-verify="required" placeholder="请输入角色别名" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label">请求方式</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="http_method" title="POST" value="POST">
+            <input type="checkbox" name="http_method" title="GET" value="GET">
+            <input type="checkbox" name="http_method" title="PUT" value="PUT">
+            <input type="checkbox" name="http_method" title="DELETE" value="DELETE">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">请求路径</label>
+        <div class="layui-input-block">
+            <textarea placeholder="请输入内容" class="layui-textarea" name="http_path"></textarea>
         </div>
     </div>
     <div class="layui-form-item layui-hide">

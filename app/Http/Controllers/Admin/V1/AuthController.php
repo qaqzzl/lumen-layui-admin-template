@@ -16,6 +16,7 @@ use App\Models\AdminUser;
 use App\Models\AdminUserRole;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends BaseController {
 
@@ -250,11 +251,10 @@ class AuthController extends BaseController {
         if (!empty($request->slug))
             $adminPermission->where('slug','like','%'.$request->slug.'%');
 
-        $info = $adminPermission->paginate($limit);
-
-        foreach ($info as &$vo) {
-            $vo->http_method = explode(',',$vo->http_method);
-            $vo->http_path = explode("\n",$vo->http_path);
+        $info = $adminPermission->paginate($limit)->toArray();
+        foreach ($info['data'] as &$vo) {
+            $vo['created_at'] = date('Y-m-d',$vo['created_at']);
+            $vo['updated_at'] = date('Y-m-d',$vo['updated_at']);
         }
 
         return admin_success($info);
@@ -278,4 +278,32 @@ class AuthController extends BaseController {
         return admin_error(5000);
     }
 
+    /**
+     * 管理员权限 - 修改
+    */
+    public function adminPermissionSave(Request $request)
+    {
+        $data = $this->validate($request,[
+            'name'=>'required',
+            'slug'=>'required',
+            'http_method'=>'',
+            'http_path'=>'',
+        ]);
+        $data['http_method'] = implode(',',$data['http_method']);
+        if (AdminPermission::where('id',$request->id)->update($data)) {
+            return admin_success();
+        }
+        return admin_error(5000);
+    }
+
+    public function adminPermissionDelete(Request $request)
+    {
+        $ids = array_flip($request->ids);
+        unset($ids[1]);
+        $ids = array_flip($ids);
+        if (AdminPermission::whereIn('id',$ids)->delete()) {
+            return admin_success();
+        }
+        return admin_error(5000);
+    }
 }
