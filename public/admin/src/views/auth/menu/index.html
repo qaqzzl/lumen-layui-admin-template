@@ -1,0 +1,157 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layuiAdmin 后台管理员</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../layuiadmin/style/admin.css" media="all">
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        
+        <div class="layui-card-body">
+            <div class="layui-row">
+                <div class="layui-col-xs6">
+                    
+                    <fieldset class="layui-elem-field layui-field-title" >
+                        <legend>操作菜单</legend>
+                    </fieldset>
+                    <div id="menu" class="demo-tree demo-tree-box" ></div>
+                    
+                </div>
+                <div class="layui-col-xs6">
+    
+    
+                    <fieldset class="layui-elem-field layui-field-title">
+                        <legend>编辑菜单</legend>
+                    </fieldset>
+                    <form class="layui-form layui-form-pane" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">标题</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">URI</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="uri" lay-verify="required" placeholder="请输入" class="layui-input">
+                            </div>
+                        </div>
+        
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">图标</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="icon" placeholder="请选择图标" autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">更多请查看 <a href="">layui.com</a></div>
+                        </div>
+        
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">排序</label>
+                                <div class="layui-input-block" style="width: 100px;">
+                                    <input type="text" name="order" placeholder="排序" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">权限</label>
+                            <div class="layui-input-block">
+                                <select name="permission" lay-filter="permission" lay-search="">
+                                    <option value=""></option>
+                                    <option value="0">写作</option>
+                                    <option value="1">阅读</option>
+                                    <option value="2">游戏</option>
+                                    <option value="3">音乐</option>
+                                    <option value="4">旅行</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <input type="hidden" name="id">
+                                <input type="hidden" name="parent_id" value="0">
+                                <button class="layui-btn" lay-submit="" lay-filter="LAY-submit">立即提交</button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../../layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '../../../layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'tree', 'util'], function(){
+        var $ = layui.$
+            ,admin = layui.admin
+            ,api_list = layui.setter.api_list
+            ,form = layui.form
+            ,tree = layui.tree
+            ,layer = layui.layer
+            ,util = layui.util;
+    
+        //获取菜单数据
+        admin.req({
+            url: layui.setter.api_domain + layui.setter.api_list.AdminMenuList
+            ,done: function(res){
+                var menu_data = res.data.menu
+                menu_tree(menu_data)
+            }
+        });
+    
+        function menu_tree(data) {
+            //开启节点操作图标
+            tree.render({
+                elem: '#menu'
+                ,data: data
+                ,edit: ['add', 'update', 'del'] //操作节点的图标
+                ,accordion: true
+                ,text: {
+                    defaultNodeName: '请命名' //节点默认名称
+                    ,none: '无下级' //数据为空时的提示文本
+                }
+                ,click: function(obj){
+                    layer.msg(JSON.stringify(obj.data));
+                }
+            });
+        }
+    
+        //监听提交
+        form.on('submit(LAY-submit)', function(data){
+            layer.alert(JSON.stringify(data.field), {
+                title: '最终的提交信息'
+            })
+            var url = layui.setter.api_domain + api_list.AdminPermissionSave
+            if (data.field.id) {
+                url = url
+            }
+            admin.req({
+                url: url
+                ,data:field
+                ,done: function(res){
+                    location.reload()
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
+

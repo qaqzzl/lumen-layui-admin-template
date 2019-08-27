@@ -15,12 +15,13 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function(exports){
 
         //接口列表
         ,api_list: {
+            Menu: 'auth/menu',                                              //获取用户菜单
+            
             AdminUserList: 'auth/admin.user.list',                          //管理员用户列表
             AdminUserAdd: 'auth/admin.user.create',                         //管理员用户添加
             AdminUserSave: 'auth/admin.user.save',                          //管理员用户修改
             AdminUserDel: 'auth/admin.user.delete',                         //管理员用户删除
             AdminUserRoleSave: 'auth/admin.user.role.save',                 //管理员用户角色修改
-        
         
             AdminRoleList: 'auth/admin.role.list',                          //管理员角色列表
             AdminRoleAdd: 'auth/admin.role.create',                         //管理员角色添加
@@ -28,11 +29,12 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function(exports){
             AdminRoleDel: 'auth/admin.role.delete',                         //管理员角色删除
             AdminRolePermissionSave: 'auth/admin.role.permission.save',     //管理员用户角色修改
 
-
             AdminPermissionList: 'auth/admin.permission.list',              //管理员权限列表
             AdminPermissionAdd: 'auth/admin.permission.create',             //管理员权限添加
             AdminPermissionSave: 'auth/admin.permission.save',              //管理员权限修改
             AdminPermissionDel: 'auth/admin.permission.delete',             //管理员权限删除
+        
+            AdminMenuList: 'auth/admin.menu.list',                          //管理员菜单列表
         }
     
     
