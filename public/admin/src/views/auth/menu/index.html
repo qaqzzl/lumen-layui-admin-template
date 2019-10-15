@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,60 +13,72 @@
 
 <div class="layui-fluid">
     <div class="layui-card">
-        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">权限名称</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="name" placeholder="请输入" autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">权限别名</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="slug" placeholder="请输入" autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <button class="layui-btn layuiadmin-btn-admin" lay-submit lay-filter="LAY-user-back-search">
-                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
         
         <div class="layui-card-body">
-            <div style="padding-bottom: 10px;">
-                <button class="layui-btn layuiadmin-btn-admin" data-type="batchdel">删除</button>
-                <button class="layui-btn layuiadmin-btn-admin" data-type="add">添加</button>
+            <div class="layui-row">
+                <div class="layui-col-xs6">
+                    
+                    <fieldset class="layui-elem-field layui-field-title" >
+                        <legend>操作菜单</legend>
+                    </fieldset>
+                    <div id="menu" class="demo-tree demo-tree-box" ></div>
+                    
+                </div>
+                <div class="layui-col-xs6">
+                    <fieldset class="layui-elem-field layui-field-title">
+                        <legend>编辑菜单</legend>
+                    </fieldset>
+                    <form class="layui-form layui-form-pane" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">标题</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">URI</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="uri" lay-verify="" placeholder="请输入" class="layui-input">
+                            </div>
+                        </div>
+        
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">图标</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="icon" placeholder="请选择图标" autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">更多请查看 <a href="https://www.layui.com/doc/element/icon.html#table" target="_blank">https://www.layui.com/doc/element/icon.html#table</a></div>
+                        </div>
+        
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">排序</label>
+                                <div class="layui-input-block" style="width: 100px;">
+                                    <input type="text" name="order" placeholder="排序" autocomplete="off" class="layui-input" value="0">
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">权限</label>
+                            <div class="layui-input-block">
+                                <div class="tags layui-input-block" id="tags">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <input type="hidden" name="id">
+                                <input type="hidden" name="parent_id" value="0">
+                                <input type="button" class="layui-btn" lay-submit lay-filter="LAY-submit" id="LAY-submit" value="立即提交">
+<!--                                <button class="layui-btn" lay-submit lay-filter="LAY-submit" id="LAY-submit">立即提交</button>-->
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
             </div>
-            
-            <table id="LAY-list" lay-filter="LAY-list"></table>
-    
-            <script type="text/html" id="avatarTpl">
-                <img style="display: inline-block; width: 50%; height: 100%;" src= {{ d.avatar }}>
-            </script>
-    
-            <script type="text/html" id="table-http_method">
-                {{#  layui.each(d.http_method, function(index, item){ }}
-                    <button class="layui-btn layui-btn-xs">{{ item }}</button>
-                {{#  }); }}
-            </script>
-    
-            <script type="text/html" id="table-http_path">
-                {{#  layui.each(d.http_path, function(index, item){ }}
-                <button class="layui-btn layui-btn-xs">{{ item }}</button><br>
-                {{#  }); }}
-            </script>
-            
-            <script type="text/html" id="table-operating">
-                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
-                {{#  if(d.id == 1){ }}
-                <a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>删除</a>
-                {{#  } else { }}
-                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
-                {{#  } }}
-            </script>
         </div>
     </div>
 </div>
@@ -79,96 +89,85 @@
         base: '../../../layuiadmin/' //静态资源所在路径
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use(['index', 'auth_permission', 'table'], function() {
+    }).use(['index', 'tree', 'util'], function(){
         var $ = layui.$
             ,admin = layui.admin
             ,api_list = layui.setter.api_list
             ,form = layui.form
-            ,table = layui.table;
-        
-        //监听搜索
-        form.on('submit(LAY-user-back-search)', function(data) {
-            var field = data.field;
-            
-            //执行重载
-            table.reload('LAY-list', {
-                where: field
-            });
-        });
-        
-        //事件
-        var active = {
-            batchdel: function(){
-                var checkStatus = table.checkStatus('LAY-list')
-                    ,checkData = checkStatus.data; //得到选中的数据
-                
-                if(checkData.length === 0){
-                    return layer.msg('请选择数据');
-                }
-                var ids = []
-                $.each(checkData,function(key,vo){
-                    ids[key] = vo.id
-                });
-    
-                layer.confirm('确定删除吗？', function(index) {
-                    //执行 Ajax 后重载
-                    admin.req({
-                        url: layui.setter.api_domain + api_list.AdminPermissionDel
-                        ,data: {ids:ids}
-                        ,done: function(res){
-                            table.reload('LAY-list');
-                            layer.msg('已删除');
-                        }
-                    });
-                   
-                });
-            }
-            ,add: function(){
-                layer.open({
-                    type: 2
-                    ,title: '添加权限'
-                    ,content: 'add.html'
-                    ,area: ['500px', '500px']
-                    ,btn: ['确定', '取消']
-                    ,yes: function(index, layero){
-                        var iframeWindow = window['layui-layer-iframe'+ index]
-                            ,submitID = 'LAY-submit'
-                            ,submit = layero.find('iframe').contents().find('#'+ submitID);
-                        
-                        //监听提交
-                        iframeWindow.layui.form.on('submit('+ submitID +')', function(data){
-                            var field = data.field; //获取提交的字段
+            ,tree = layui.tree
+            ,layer = layui.layer
+            ,util = layui.util;
 
-                            //解决复选框取值问题
-                            var body = layer.getChildFrame('body',index);
-                            var checkboxValue = [];
-                            body.find("input:checkbox[name='http_method']:checked").each(function(key) { // 遍历name=standard的多选框
-                                console.log(key)
-                                checkboxValue[key] = $(this).val();
-                            });
-                            field.http_method = checkboxValue
-                            console.log(field)
-                            //提交 Ajax 成功后，静态更新表格中的数据
-                            admin.req({
-                                url: layui.setter.api_domain + api_list.AdminPermissionAdd
-                                ,data:field
-                                ,done: function(res){
-                                    console.log(res)
-                                    table.reload('LAY-list'); //数据刷新
-                                    layer.close(index);     //关闭弹层
-                                }
-                            });
-                            
-                        });
-                        
-                        submit.trigger('click');
-                    }
-                });
+
+        //获取菜单数据
+        admin.req({
+            url: layui.setter.api_domain + layui.setter.api_list.AdminMenuList
+            ,done: function(res){
+                var menu_data = res.data.menu
+                menu_tree(menu_data)
             }
+        });
+    
+        function menu_tree(data) {
+            //开启节点操作图标
+            tree.render({
+                elem: '#menu'
+                ,data: data
+                ,edit: ['add', 'del'] //操作节点的图标
+                ,accordion: true
+                ,onlyIconControl: true
+                ,customOperate: false
+                ,text: {
+                    defaultNodeName: '请命名' //节点默认名称
+                    ,none: '无下级' //数据为空时的提示文本
+                }
+                ,click: function(obj){          //点击节点的回调
+                    layer.msg(JSON.stringify(obj.data));
+                },operate: function(obj){       //操作节点的回调
+                    var type = obj.type; //得到操作类型：add、edit、del
+                    var data = obj.data; //得到当前节点的数据
+                    var elem = obj.elem; //得到当前节点元素
+
+                    //Ajax 操作
+                    var id = data.id; //得到节点索引
+                    if(type === 'add'){ //增加节点
+                        console.log(data)
+                        if (!data.id) {
+                            layer.msg("请先提交此菜单")
+                            elem.children('.layui-tree-pack').remove()
+                        } else {
+                            layui.$("input[name=title]").val("请命名");
+                            layui.$("input[name=parent_id]").val(data.id);
+                            layui.$("input[name=order]").val(0);
+                            layui.$("input[name=icon]").val('layui-icon-set-fill');
+                        }
+                    } else if(type === 'del'){ //删除节点
+                        admin.req({
+                            url: layui.setter.api_domain + api_list.AdminMenuDel
+                            ,data:{ids:[data.id]}
+                            ,done: function(res) {
+                                layer.msg(res.msg)
+                            },
+                            success: function (res) {
+                                // setInterval(location.reload(),1000)
+                            }
+                        });
+
+                    };
+                }
+            });
         }
-        $('.layui-btn.layuiadmin-btn-admin').on('click', function(){
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
+    
+        //监听提交
+        form.on('submit(LAY-submit)', function(data){
+            console.log(data.field)
+            admin.req({
+                url: layui.setter.api_domain + api_list.AdminMenuAdd
+                ,data:data.field
+                ,done: function(res){
+                    location.reload()
+                }
+            });
         });
     });
 </script>

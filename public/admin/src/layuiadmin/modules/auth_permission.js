@@ -14,10 +14,7 @@ layui.define(['table', 'form'], function(exports){
         ,form = layui.form
         ,admin = layui.admin
         ,api_list = layui.setter.api_list
-    var tableloading = layui.layer.open({       //表格第一次加载动画
-        type:3
-        ,offset: 't'
-    });
+
     
     //管理员管理
     table.render({
@@ -52,7 +49,6 @@ layui.define(['table', 'form'], function(exports){
             $("td[data-field='http_method']").each(function(){
                 $(this).find(".layui-table-cell").removeClass('layui-table-cell');
             });
-            layui.layer.close(tableloading)     //表格第一次加载动画关闭
         }
         ,text: '对不起，加载出现异常！'
     });
@@ -88,7 +84,6 @@ layui.define(['table', 'form'], function(exports){
                     iframeWindow.layui.form.on('submit('+ submitID +')', function(data){
                         var field = data.field; //获取提交的字段
 
-
                         //获取checkbox数据
                         quotation = new Array();
                         iframeWindow.layui.$("input:checkbox[name='http_method']:checked").each(function(){
@@ -113,9 +108,6 @@ layui.define(['table', 'form'], function(exports){
                 ,success: function(layero, index){
                     var body=layer.getChildFrame('body',index);
                     $.each(infodata,function(key,vo){
-                        if(key != 'http_method' ) {
-
-                        }
                         body.find("input[name="+key+"]").val(vo);
                     })
                     body.find("textarea[name=http_path]").val(infodata.http_path.join("\n"));

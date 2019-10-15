@@ -91,8 +91,7 @@ class AdminUser extends Model
         $permission = self::GetPermissions($user_id);
         $root = false;  //是否具备超级权限 *
         foreach ($permission as $vo) {
-            $path = explode("\n",$vo->http_path);
-            if (in_array("*",$path)) {
+            if (in_array("*",$vo->http_path)) {
                 $root = true;
                 break;
             }
@@ -104,7 +103,6 @@ class AdminUser extends Model
         }
         $menu = getChildren($menu);
         return $menu;
-        dd($menu);
     }
 }
 
@@ -114,6 +112,7 @@ function getChildren ($data, $pid=0) {
         if ($vo->parent_id == $pid) {
             $vo->children = getChildren($data,$vo->id);
             $vo->uri = config('admin.domain_path').$vo->uri;
+            $vo->spread = true;   //节点展开
             $arr[] = $vo;
         }
     }

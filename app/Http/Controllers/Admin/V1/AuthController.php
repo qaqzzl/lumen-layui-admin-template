@@ -9,13 +9,16 @@
 namespace App\Http\Controllers\Admin\V1;
 
 
+use App\Models\AdminMenu;
 use App\Models\AdminPermission;
 use App\Models\AdminRole;
 use App\Models\AdminRolePermission;
 use App\Models\AdminUser;
 use App\Models\AdminUserRole;
+use function App\Models\getChildren;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends BaseController {
 
@@ -250,19 +253,11 @@ class AuthController extends BaseController {
         if (!empty($request->slug))
             $adminPermission->where('slug','like','%'.$request->slug.'%');
 
-        $info = $adminPermission->paginate($limit);
-
-        foreach ($info as &$vo) {
-            $vo->http_method = explode(',',$vo->http_method);
-            $vo->http_path = explode("\n",$vo->http_path);
-        }
-        $info = $info->toArray();
-        $info['data'] = array_map(function ($vo) {
+        $info = $adminPermission->paginate($limit)->toArray();
+        foreach ($info['data'] as &$vo) {
             $vo['created_at'] = date('Y-m-d',$vo['created_at']);
             $vo['updated_at'] = date('Y-m-d',$vo['updated_at']);
-            return $vo;
-        },$info['data']);
-
+        }
         return admin_success($info);
     }
 
@@ -279,20 +274,6 @@ class AuthController extends BaseController {
         ]);
         $data['http_method'] = implode(',',$data['http_method']);
         if (AdminPermission::create($data)) {
-            return admin_success();
-        }
-        return admin_error(5000);
-    }
-
-    /**
-     * 管理员权限 - 删除
-    */
-    public function adminPermissionDelete(Request $request)
-    {
-        $ids = array_flip($request->ids);
-        unset($ids[1]);
-        $ids = array_flip($ids);
-        if (AdminPermission::whereIn('id',$ids)->delete()) {
             return admin_success();
         }
         return admin_error(5000);
@@ -316,4 +297,74 @@ class AuthController extends BaseController {
         return admin_error(5000);
     }
 
+    /**
+     * 管理员权限 - 删除
+    */
+    public function adminPermissionDelete(Request $request)
+    {
+        $ids = array_flip($request->ids);
+        unset($ids[1]);
+        $ids = array_flip($ids);
+        if (AdminPermission::whereIn('id',$ids)->delete()) {
+            return admin_success();
+        }
+        return admin_error(5000);
+    }
+
+
+
+    /**
+     * 管理员菜单 - 列表
+    */
+    public function adminMenuList(Request $request)
+    {
+        $menu = AdminMenu::all();
+        $menu = getChildren($menu);
+        return admin_success(['menu'=>$menu]);
+    }
+
+    /**
+     * 管理员菜单 - 添加
+    */
+    public function adminMenuCreate(Request $request)
+    {
+        $data = $this->validate($request,[
+            'title'=>'required',
+            'parent_id'=>'required',
+            'uri'=>'',
+            'icon'=>'',
+            'order'=>'integer',
+            'permission'=>'',
+        ]);
+//        $data['permission'] = implode(',',$data['permission']);
+        if (AdminMenu::create($data)) {
+            return admin_success();
+        }
+        return admin_error(5000);
+    }
+
+    /**
+     * 管理员菜单 - 修改
+    */
+    public function adminMenuSave()
+    {
+
+    }
+
+    /**
+     * 管理员菜单 - 删除
+    */
+    public function adminMenuDelete(Request $request)
+    {
+        $ids = array_flip($request->ids);
+        unset($ids[1],$ids[2],$ids[3],$ids[4],$ids[5],$ids[6],$ids[7]);
+        $ids = array_flip($ids);
+        foreach ($ids as $vo) { //判断是否存在下级
+            if ($menu = AdminMenu::where('parent_id',$vo)->first()) return admin_error(6100,'','请删除'.$menu['title'].'下级菜单');
+        }
+        if (AdminMenu::whereIn('id',$ids)->delete()) {
+            return admin_success();
+        }
+        return admin_error(5000);
+    }
 }
