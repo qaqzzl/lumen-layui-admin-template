@@ -57,7 +57,7 @@
     
             <script type="text/html" id="table-http_path">
                 {{#  layui.each(d.http_path, function(index, item){ }}
-                <button class="layui-btn layui-btn-xs">{{ item }}</button>
+                <button class="layui-btn layui-btn-xs">{{ item }}</button><br>
                 {{#  }); }}
             </script>
             
@@ -79,7 +79,7 @@
         base: '../../../layuiadmin/' //静态资源所在路径
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use(['index', 'auth_permission', 'table'], function(){
+    }).use(['index', 'auth_permission', 'table'], function() {
         var $ = layui.$
             ,admin = layui.admin
             ,api_list = layui.setter.api_list
@@ -87,7 +87,7 @@
             ,table = layui.table;
         
         //监听搜索
-        form.on('submit(LAY-user-back-search)', function(data){
+        form.on('submit(LAY-user-back-search)', function(data) {
             var field = data.field;
             
             //执行重载
@@ -111,10 +111,9 @@
                 });
     
                 layer.confirm('确定删除吗？', function(index) {
-        
                     //执行 Ajax 后重载
                     admin.req({
-                        url: layui.setter.api_domain + api_list.AdminUserDel
+                        url: layui.setter.api_domain + api_list.AdminPermissionDel
                         ,data: {ids:ids}
                         ,done: function(res){
                             table.reload('LAY-list');
@@ -127,7 +126,7 @@
             ,add: function(){
                 layer.open({
                     type: 2
-                    ,title: '添加管理员'
+                    ,title: '添加权限'
                     ,content: 'add.html'
                     ,area: ['500px', '500px']
                     ,btn: ['确定', '取消']

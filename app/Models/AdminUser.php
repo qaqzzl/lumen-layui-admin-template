@@ -91,7 +91,8 @@ class AdminUser extends Model
         $permission = self::GetPermissions($user_id);
         $root = false;  //是否具备超级权限 *
         foreach ($permission as $vo) {
-            if ($vo->http_path == '*') {
+            $path = explode("\n",$vo->http_path);
+            if (in_array("*",$path)) {
                 $root = true;
                 break;
             }
@@ -103,6 +104,7 @@ class AdminUser extends Model
         }
         $menu = getChildren($menu);
         return $menu;
+        dd($menu);
     }
 }
 

@@ -256,6 +256,12 @@ class AuthController extends BaseController {
             $vo->http_method = explode(',',$vo->http_method);
             $vo->http_path = explode("\n",$vo->http_path);
         }
+        $info = $info->toArray();
+        $info['data'] = array_map(function ($vo) {
+            $vo['created_at'] = date('Y-m-d',$vo['created_at']);
+            $vo['updated_at'] = date('Y-m-d',$vo['updated_at']);
+            return $vo;
+        },$info['data']);
 
         return admin_success($info);
     }
@@ -273,6 +279,38 @@ class AuthController extends BaseController {
         ]);
         $data['http_method'] = implode(',',$data['http_method']);
         if (AdminPermission::create($data)) {
+            return admin_success();
+        }
+        return admin_error(5000);
+    }
+
+    /**
+     * 管理员权限 - 删除
+    */
+    public function adminPermissionDelete(Request $request)
+    {
+        $ids = array_flip($request->ids);
+        unset($ids[1]);
+        $ids = array_flip($ids);
+        if (AdminPermission::whereIn('id',$ids)->delete()) {
+            return admin_success();
+        }
+        return admin_error(5000);
+    }
+
+    /**
+     * 管理员权限 - 修改
+    */
+    public function adminPermissionSave(Request $request)
+    {
+        $data = $this->validate($request,[
+            'name'=>'required',
+            'slug'=>'required',
+            'http_method'=>'',
+            'http_path'=>'',
+        ]);
+        $data['http_method'] = implode(',',$data['http_method']);
+        if (AdminPermission::where('id',$request->id)->update($data)) {
             return admin_success();
         }
         return admin_error(5000);
