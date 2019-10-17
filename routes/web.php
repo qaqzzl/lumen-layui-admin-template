@@ -54,7 +54,12 @@ $router->group([
 
             $router->post('auth/admin.menu.list', 'AuthController@adminMenuList');                           //管理员权限列表
             $router->post('auth/admin.menu.create', 'AuthController@adminMenuCreate');                       //管理员权限添加
+            $router->post('auth/admin.menu.save', 'AuthController@adminMenuSave');                           //管理员权限添加
             $router->post('auth/admin.menu.delete', 'AuthController@adminMenuDelete');                       //管理员权限删除
+
+            $router->post('system/config.list', 'SystemController@configList');                              //系统配置列表
+            $router->post('system/config.create', 'SystemController@configCreate');                          //系统配置添加
+
 
         });
     });

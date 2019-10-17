@@ -122,7 +122,6 @@ layui.define(['laytpl', 'layer'], function(exports){
 			,dataType: 'json'
 			,contentType:'application/json;charset=UTF-8'
 			,success: function(res){
-				layer.close(index_loading);
 				var statusCode = response.statusCode;
 				
 				//只有 response 的 code 一切正常才执行 done
@@ -154,6 +153,7 @@ layui.define(['laytpl', 'layer'], function(exports){
 				
 				//只要 http 状态码正常，无论 response 的 code 是否正常都执行 success
 				typeof success === 'function' && success(res);
+				layer.close(index_loading);
 			}
 			,error: function(e, code){
 				layer.close(index_loading);

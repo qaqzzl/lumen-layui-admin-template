@@ -111,7 +111,7 @@ function getChildren ($data, $pid=0) {
     foreach ($data as $vo) {
         if ($vo->parent_id == $pid) {
             $vo->children = getChildren($data,$vo->id);
-            $vo->uri = config('admin.domain_path').$vo->uri;
+            $vo->url = config('admin.domain_path').$vo->uri;
             $vo->spread = true;   //节点展开
             $arr[] = $vo;
         }

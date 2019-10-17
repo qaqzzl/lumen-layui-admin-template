@@ -36,7 +36,11 @@ layui.define(['laytpl', 'layer', 'element', 'util'], function(exports){
 
             AdminMenuList: 'auth/admin.menu.list',                          //管理员菜单列表
             AdminMenuAdd: 'auth/admin.menu.create',                         //管理员菜单列表
+            AdminMenuSave: 'auth/admin.menu.save',                          //管理员菜单列表
             AdminMenuDel: 'auth/admin.menu.delete',                         //管理员菜单列表
+
+            SystemConfigList: 'system/config.list',                         //系统配置列表
+            SystemConfigCreate: 'system/config.create',                     //系统配置添加
         }
     
     

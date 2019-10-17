@@ -71,6 +71,7 @@
                             <div class="layui-input-block">
                                 <input type="hidden" name="id">
                                 <input type="hidden" name="parent_id" value="0">
+                                <input type="hidden" name="id" value="">
                                 <input type="button" class="layui-btn" lay-submit lay-filter="LAY-submit" id="LAY-submit" value="立即提交">
 <!--                                <button class="layui-btn" lay-submit lay-filter="LAY-submit" id="LAY-submit">立即提交</button>-->
                             </div>
@@ -122,7 +123,15 @@
                     ,none: '无下级' //数据为空时的提示文本
                 }
                 ,click: function(obj){          //点击节点的回调
-                    layer.msg(JSON.stringify(obj.data));
+                    var type = obj.type; //得到操作类型：add、edit、del
+                    var data = obj.data; //得到当前节点的数据
+                    var elem = obj.elem; //得到当前节点元素
+                    layui.$("input[name=title]").val(data.title);
+                    layui.$("input[name=parent_id]").val(data.parent_id);
+                    layui.$("input[name=id]").val(data.id);
+                    layui.$("input[name=uri]").val(data.uri);
+                    layui.$("input[name=order]").val(data.order);
+                    layui.$("input[name=icon]").val(data.icon);
                 },operate: function(obj){       //操作节点的回调
                     var type = obj.type; //得到操作类型：add、edit、del
                     var data = obj.data; //得到当前节点的数据
@@ -141,7 +150,7 @@
                             layui.$("input[name=order]").val(0);
                             layui.$("input[name=icon]").val('layui-icon-set-fill');
                         }
-                    } else if(type === 'del'){ //删除节点
+                    } else if(type === 'del') { //删除节点
                         admin.req({
                             url: layui.setter.api_domain + api_list.AdminMenuDel
                             ,data:{ids:[data.id]}
@@ -149,10 +158,16 @@
                                 layer.msg(res.msg)
                             },
                             success: function (res) {
-                                // setInterval(location.reload(),1000)
+                                if (res.code != 0) {
+                                    setTimeout(function () {
+                                        location.reload()
+                                    },1000);
+                                }
+                            },
+                            error: function () {
+                                
                             }
                         });
-
                     };
                 }
             });
@@ -161,8 +176,13 @@
         //监听提交
         form.on('submit(LAY-submit)', function(data){
             console.log(data.field)
+            if (data.field.id) {
+                var url = layui.setter.api_domain + api_list.AdminMenuSave
+            } else {
+                var url = layui.setter.api_domain + api_list.AdminMenuAdd
+            }
             admin.req({
-                url: layui.setter.api_domain + api_list.AdminMenuAdd
+                url: url
                 ,data:data.field
                 ,done: function(res){
                     location.reload()

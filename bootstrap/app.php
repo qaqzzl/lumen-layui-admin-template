@@ -7,7 +7,7 @@ require_once __DIR__.'/../vendor/autoload.php';
 ))->bootstrap();
 
 //func
-require_once '../app/Common/func.php';
+require_once __DIR__.'/../app/Common/func.php';
 
 /*
 |--------------------------------------------------------------------------

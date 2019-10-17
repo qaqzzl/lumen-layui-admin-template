@@ -346,9 +346,21 @@ class AuthController extends BaseController {
     /**
      * 管理员菜单 - 修改
     */
-    public function adminMenuSave()
+    public function adminMenuSave(Request $request)
     {
-
+        $data = $this->validate($request,[
+            'title'=>'required',
+            'parent_id'=>'required',
+            'uri'=>'',
+            'icon'=>'',
+            'order'=>'integer',
+            'permission'=>'',
+        ]);
+//        $data['permission'] = implode(',',$data['permission']);
+        if (AdminMenu::where('id',$request->id)->update($data)) {
+            return admin_success();
+        }
+        return admin_error(5000);
     }
 
     /**
