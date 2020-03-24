@@ -232,7 +232,7 @@ create table if not exists `user_member`(
 create table if not exists `user_auths`(
     `id` int unsigned auto_increment primary key,
     `member_id` int not null comment '会员ID',
-    `identity_type` char(20) not null comment '类型,wechat_applet,qq,wb,phone,number,email',
+    `identity_type` char(20) not null comment '类型,wechat_applet,qq,wb,phone,account_number,email',
     `identifier` varchar(64) not null default '' comment '微信,QQ,微博opendid | 手机号,邮箱,账号',
     `credential` varchar(64) not null default '' comment '密码凭证（站内的保存密码，站外的不保存或保存access_token）',
     KEY `member_id` (`member_id`),
@@ -258,133 +258,26 @@ create table if not exists `user_auths_token`(
 
 
 
--- ****************************
--- 商城模块
--- ****************************
-
--- ----------------------------
--- Table structure for m_shop_goods
--- 商品表
--- ----------------------------
-create table if not exists `shop_goods`(
-    `goods_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '商品id',
-    `category_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '分类id',
-    `category_path` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '分类路径',
-    `goods_sn` varchar(60) NOT NULL DEFAULT '' COMMENT '商品编号',
-    `goods_name` varchar(120) NOT NULL DEFAULT '' COMMENT '商品名称',
-    `pv_count` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '点击数',
-    `brand_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '品牌id',
-    `store_count` smallint(5) unsigned NOT NULL DEFAULT '10' COMMENT '库存数量',
-    `comment_count` smallint(5) DEFAULT '0' COMMENT '商品评论数',
-    `weight` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '商品重量克为单位',
-    `volume` double(10,4) unsigned NOT NULL DEFAULT '0.0000' COMMENT '商品体积。单位立方米',
-    `market_price` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '市场价',
-    `shop_price` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '本店价',
-    `cost_price` decimal(10,2) DEFAULT '0.00' COMMENT '商品成本价',
-    `price_ladder` text COMMENT '价格阶梯',
-    `keywords` varchar(255) NOT NULL DEFAULT '' COMMENT '商品关键词',
-    `goods_remark` varchar(255) NOT NULL DEFAULT '' COMMENT '商品简单描述',
-    `goods_content` text COMMENT '商品详细描述',
-    `mobile_content` text COMMENT '手机端商品详情',
-    `original_img` varchar(255) NOT NULL DEFAULT '' COMMENT '商品上传原始图',
-    `is_virtual` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '是否为虚拟商品 0为实物 1电子卡券 2预约 3外卖',
-    `virtual_indate` int(11) DEFAULT '0' COMMENT '虚拟商品有效期',
-    `virtual_limit` smallint(6) DEFAULT '0' COMMENT '虚拟商品购买上限',
-    `virtual_sales_sum` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '虚拟销售量',
-    `virtual_collect_sum` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '虚拟收藏量',
-    `virtual_comment_count` int(11) unsigned DEFAULT '0' COMMENT '虚拟商品评论数',
-    `collect_sum` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '收藏量',
-    `is_on_sale` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '是否上架',
-    `is_free_shipping` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否包邮0否1是',
-    `sort` smallint(4) unsigned NOT NULL DEFAULT '50' COMMENT '商品排序',
-    `is_recommend` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否推荐',
-    `is_new` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否新品',
-    `is_hot` tinyint(1) DEFAULT '0' COMMENT '是否热卖',
-    `give_integral` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '购买商品赠送积分',
-    `exchange_integral` int(10) NOT NULL DEFAULT '0' COMMENT '积分兑换：0不参与积分兑换，积分和现金的兑换比例见后台配置',
-    `suppliers_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '供货商ID',
-    `sales_sum` int(11) DEFAULT '0' COMMENT '商品销量',
-    `prom_type` tinyint(1) DEFAULT '0' COMMENT '0默认1抢购2团购3优惠促销4预售5虚拟(5其实没用)6拼团7搭配购8砍价',
-    `prom_id` int(11) NOT NULL DEFAULT '0' COMMENT '优惠活动id',
-    `commission` decimal(10,2) DEFAULT '0.00' COMMENT '佣金用于分销分成金额',
-    `spu` varchar(128) DEFAULT '' COMMENT 'SPU',
-    `sku` varchar(128) DEFAULT '' COMMENT 'SKU',
-    `template_id` int(11) unsigned DEFAULT '0' COMMENT '运费模板ID',
-    `video` varchar(255) DEFAULT '' COMMENT '视频',
-    `label_id` varchar(255) DEFAULT NULL COMMENT '商品标签',
-    `audit` tinyint(1) DEFAULT '0' COMMENT '0审核通过，1待审核，2未通过',
-    `created_at` int not null default 0 comment '创建时间',
-	`updated_at` int not null default 0 comment '更新时间',
-    `deleted_at` int not null default 0 comment '删除时间',
-    PRIMARY KEY (`goods_id`),
-    KEY `goods_sn` (`goods_sn`),
-    KEY `category_id` (`category_id`),
-    KEY `category_path` (`category_path`),
-    KEY `brand_id` (`brand_id`),
-    KEY `store_count` (`store_count`),
-    KEY `goods_weight` (`weight`),
-    KEY `sort_order` (`sort`)
-)engine=innodb default charset=utf8mb4;
-
--- ----------------------------
--- 商品分类
--- ----------------------------
-CREATE TABLE `shop_goods_category` (
-  `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '商品分类id',
-  `name` varchar(90) NOT NULL DEFAULT '' COMMENT '商品分类名称',
-  `mobile_name` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT '' COMMENT '手机端显示的商品分类名',
-  `parent_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '父id',
-  `parent_id_path` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT '' COMMENT '家族图谱',
-  `level` tinyint(1) DEFAULT '0' COMMENT '等级',
-  `sort_order` tinyint(1) unsigned NOT NULL DEFAULT '50' COMMENT '顺序排序',
-  `is_show` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '是否显示',
-  `image` varchar(512) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT '' COMMENT '分类图片',
-  `is_hot` tinyint(1) DEFAULT '0' COMMENT '是否推荐为热门分类',
-  `cat_group` tinyint(1) DEFAULT '0' COMMENT '分类分组默认0',
-  PRIMARY KEY (`id`),
-  KEY `parent_id` (`parent_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=587 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- 批发商充值列表
--- ----------------------------
-create table if not exists `shop_wholesaler_recharge`(
-	`recharge_id` int unsigned auto_increment primary key,
-	`price` decimal(10,2) not null default 0.00 comment '价格',
-	`privileges` text NOT NULL COMMENT '充值特权',
-    `created_at` int not null default 0 comment '创建时间',
-	`updated_at` int not null default 0 comment '更新时间'
-)engine=innodb default charset=utf8mb4;
-
--- ----------------------------
--- 批发商充值订单
--- ----------------------------
-
--- ----------------------------
--- 批发商分销关系
--- ----------------------------
-create table if not exists `shop_wholesaler_distribution`(
-	`distributio_id` int unsigned auto_increment primary key,
-	`user_id` int not null comment '用户ID',
-	`parent_user_id` int not null comment '上级用户ID',
-	`path` varchar(255) not null default '' comment '父级路径',
-	`created_at` int not null default 0 comment '创建时间',
-	UNIQUE KEY `user_id` (`user_id`),
-	KEY `parent_user_id` (`parent_user_id`),
-	KEY `path` (`path`)
-)engine=innodb default charset=utf8;
-
-
--- ----------------------------
--- 批发商收货地址
--- ----------------------------
 
 
 -- ****************************
--- 商城模块END
+-- 公共模块
 -- ****************************
 
+-- 短信验证码表
+create table if not exists `sms_verify_code`(
+    `id` int unsigned auto_increment primary key,
+    `phone` varchar(20) not null comment '手机号',
+    `verify_code` varchar(10) not null comment '验证码',
+    `verify_type` char(10) not null default 'login' comment '验证类型',
+    `verify_time` int not null default 0 comment '验证时间',
+    `other_id` int not null default 0 comment '其他ID',
+    `created_at` int not null default 0 comment '添加时间',
+    KEY `phone` (`phone`)
+)engine=innodb default charset=utf8 comment '短信验证码表';
 
+-- 文件资源表
 
-
-
+-- ****************************
+-- 公共模块END
+-- ****************************

@@ -34,3 +34,32 @@ function admin_error($code = 5000, $data = [], $msg = '')
     ];
     return response()->json($json);
 }
+
+// api response json func
+function api_success($data = [], $msg = '', $code=0)
+{
+    if (empty($data)) $data = (object)[];
+    if ($msg == '') {
+        $msg = config('api_response_code')[$code];
+    }
+    $json = [
+        'code'=>$code,
+        'data'=>$data,
+        'msg'=>$msg
+    ];
+    return response()->json($json);
+}
+// api response json func
+function api_error($code = 5000, $data = [], $msg = '')
+{
+    if (empty($data)) $data = (object)[];
+    if ($msg == '') {
+        $msg = config('api_response_code')[$code];
+    }
+    $json = [
+        'code'=>$code,
+        'data'=>$data,
+        'msg'=>$msg
+    ];
+    return response()->json($json);
+}

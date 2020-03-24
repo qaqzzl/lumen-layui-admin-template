@@ -64,3 +64,26 @@ $router->group([
         });
     });
 });
+
+
+
+$router->group([
+    'namespace' => 'Api\V1',
+    'prefix' => 'api/v1'
+], function() use ($router)
+{
+    $router->post('test', 'BaseController@test');                            // 测试
+
+    #登录
+    $router->get('login/wechat', 'LoginController@wechatLogin');                                      // 微信登录URL
+    $router->get('login/wechat_oauth_callback', 'LoginController@wechatOauthCallback');               // 微信登录回调
+
+    $router->post('lottery/wechat_pay_callback', 'LotteryController@wechatPayCallback');              // 抽奖微信支付回调
+
+    $router->group(['middleware' => 'auth.api.login'], function() use ($router) {
+
+        #用户
+        $router->post('user/get_member_info', 'UserController@GetMemberInfo');  // 获取用户基本信息
+    });
+
+});

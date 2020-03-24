@@ -29,9 +29,12 @@ $app = new Laravel\Lumen\Application(
  $app->withEloquent();
 
 
-//config
-$app->configure('admin_code');      //后台接口状态码
-$app->configure('admin');           //后台配置
+// config
+$app->configure('config');                   // 应用配置
+$app->configure('admin_response_code');      // 后台接口状态码
+$app->configure('api_response_code');        // 接口状态码
+$app->configure('admin');                    // 后台配置
+$app->configure('wechat');                   // 微信相关配置
 
 /*
 |--------------------------------------------------------------------------
@@ -71,8 +74,9 @@ $app->singleton(
 
  $app->routeMiddleware([
 //     'auth' => App\Http\Middleware\Authenticate::class,
-     'auth.admin.login' => App\Http\Middleware\AuthAdminLoginMiddleware::class,                 //后台登陆授权
-     'verify.admin.permission'=> \App\Http\Middleware\VerifyAdminPermissionMiddleware::class,   //后台权限验证
+     'auth.admin.login' => App\Http\Middleware\AuthAdminLoginMiddleware::class,                 // 后台登陆授权
+     'verify.admin.permission'=> \App\Http\Middleware\VerifyAdminPermissionMiddleware::class,   // 后台权限验证
+     'auth.api.login' => App\Http\Middleware\AuthApiLoginMiddleware::class,                     // api登陆授权验证
  ]);
 
 /*

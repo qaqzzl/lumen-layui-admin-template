@@ -45,6 +45,12 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        // 自定义异常拦截
+        if ($exception instanceof InternalException) {
+            return (new InternalException($exception->getCode(), $exception->getMessage() ))->render($request);
+        }
+
+
         return parent::render($request, $exception);
     }
 }
