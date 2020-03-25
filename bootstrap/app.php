@@ -36,6 +36,7 @@ $app->configure('api_response_code');        // 接口状态码
 $app->configure('admin');                    // 后台配置
 $app->configure('wechat');                   // 微信相关配置
 
+
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings

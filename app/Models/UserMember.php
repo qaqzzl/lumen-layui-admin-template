@@ -19,6 +19,9 @@ class UserMember extends Model
         if(!filter_var($value, FILTER_VALIDATE_URL)){
             if (!empty($value)) return config('config.QiniuDomain').$value;
         }
+        if (!$value) {
+            $value = 'https://cdn.qaqzz.com/admin.png';
+        }
         return $value;
 
     }

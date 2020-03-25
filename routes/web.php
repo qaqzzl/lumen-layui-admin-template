@@ -74,11 +74,16 @@ $router->group([
 {
     $router->post('test', 'BaseController@test');                            // 测试
 
-    #登录
+    # 公共接口
+    $router->post('common/send_sms', 'LoginController@sendSms');               // 发送短信验证码
+
+    # 登录注册
+    $router->post('login/phone', 'LoginController@phoneLogin');               // 手机验证码登录/注册
+    $router->post('login/account', 'LoginController@accountLogin');               // 账号密码登录
     $router->get('login/wechat', 'LoginController@wechatLogin');                                      // 微信登录URL
     $router->get('login/wechat_oauth_callback', 'LoginController@wechatOauthCallback');               // 微信登录回调
+    $router->post('login/wechat_oauth_callback', 'LoginController@wechatOauthCallback');              // 微信登录回调
 
-    $router->post('lottery/wechat_pay_callback', 'LotteryController@wechatPayCallback');              // 抽奖微信支付回调
 
     $router->group(['middleware' => 'auth.api.login'], function() use ($router) {
 

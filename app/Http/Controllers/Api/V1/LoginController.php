@@ -8,10 +8,12 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+
 use App\Http\Controllers\Api\Service\CommonService;
+use App\Http\Controllers\Api\Service\UserService;
 use App\Models\UserAuths;
 use App\Models\UserAuthsToken;
-use App\Service\UserService;
+use App\Models\UserMember;
 use EasyWeChat\Factory;
 use Faker\Provider\Uuid;
 use Illuminate\Http\Request;
@@ -20,25 +22,56 @@ class LoginController extends BaseController
 {
 
     // 手机号验证码登录
-    public function phoneLogin(Request $request, CommonService $commonService)
+    public function phoneLogin(Request $request, CommonService $commonService, UserService $userService)
     {
         // 手机号 , 验证码类型
         $data = $this->validate($request,[
             'phone'=>'required',
-            'verify_class'=>'required',
+            'verify_code'=>'required',
         ],[
             'phone.required' => '手机号不能为空',
-            'verify_class.required' => '验证码类型不能为空',
+            'verify_code.required' => '验证码不能为空',
         ]);
-        $commonService->SendSms($data['phone'], $data['verify_class']);
+        if ( ! $commonService->PhoneVerifyCode($data['phone'], $data['verify_code'],'login') ) {
+            return api_error(1003);
+        }
 
-        return api_success(null,'短信验证码发送成功');
+        $res = $userService->Login($data['phone'], 'phone');
+
+        return api_success($res);
     }
 
     // 账户密码登录
-    public function accountLogin()
+    public function accountLogin(Request $request, UserService $userService)
     {
+        // 账号 , 密码
+        $data = $this->validate($request,[
+            'account'=>'required',
+            'password'=>'required',
+        ],[
+            'account.required' => '账号不能为空',
+            'password.required' => '密码不能为空',
+        ]);
+        if ( !$UserAuths = UserAuths::where(['identifier' => $data['account']])->first()) {
+            return api_error(1002);
+        }
+        $member_id = $UserAuths->member_id;
+        // 验证密码是否正确
+        if ( !$UserMember = UserMember::where(['password'=>md5($data['password']),'member_id'=>$member_id])
+            ->select('member_id','nickname','gender','birthdate','avatar','signature','city','province','created_at')
+            ->first() ) {
+            return api_error(1002);
+        }
+        //生成用户token
+        $user_client_type = 'app';
+        $UserAuthsToken = $userService->RefreshToken($member_id, $user_client_type);
 
+        $auth = ['access_token' => $UserAuthsToken->token, 'user_id' => $member_id, 'client' => $user_client_type, 'expires_time' => $UserAuthsToken->last_time + 2592000];
+
+        return api_success([
+            '$auth'=>$auth,
+            'member_info'=>$UserMember,
+        ]);
     }
 
     // 微信登录
@@ -52,7 +85,7 @@ class LoginController extends BaseController
     }
 
     // 微信登录授权回调
-    public function wechatOauthCallback(Request $request,UserService $userService)
+    public function wechatOauthCallback(Request $request, UserService $userService)
     {
         $app = Factory::officialAccount(config('wechat.official_account.default'));
         $oauth = $app->oauth;
@@ -60,42 +93,18 @@ class LoginController extends BaseController
         // 获取 OAuth 授权结果用户信息
         $user = $oauth->user();
 
-        if (!$UserAuths = UserAuths::where(['identifier' => $user->getId(), 'identity_type' => 'wechat_official'])->first()) {
-            //注册
-            $UserMember = $userService->CreateUser([
-                'nickname'=>$user->getNickname(),
-                'avatar'=>$user->getAvatar(),
-            ], [
-                'identifier' => $user->getId(),
-                'identity_type' => 'wechat_official',
-            ]);
-            $member_id = $UserMember->member_id;
-        } else {
-            $member_id = $UserAuths->member_id;
-        }
-
-        //生成用户token
-        $user_client_type = 'wechat_official';
-        $UserAuthsToken = $userService->RefreshToken($member_id, $user_client_type);
-
-        $auth = ['access_token' => $UserAuthsToken->token, 'user_id' => $member_id, 'client' => $user_client_type, 'expires_time' => $UserAuthsToken->last_time + 2592000];
-        // 查询用户绑定信息
-        if ($userService->IsBindingInviteCode($member_id) == 'no' && $request->input('invite_code')) {
-            // 执行绑定邀请码逻辑
-            $userService->BindInviteCode($member_id, $request->input('invite_code'));
-        }
-
-        // 查询会员基本信息
-        $UserMember = $userService->MemberInfo($member_id);
-
-        return api_success([
-            'auth'=>$auth,
-            'member_info'=>$UserMember
+        $res = $userService->Login($user->getId(), 'wechat_official', [
+            'nickname'=>$user->getNickname(),
+            'avatar'=>$user->getAvatar(),
         ]);
+
+        return api_success($res);
+
     }
 
 
     // QQ登录
+
     public function qqLogin()
     {
 

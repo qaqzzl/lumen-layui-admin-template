@@ -42,7 +42,7 @@ class CommonService {
         switch ($verify_code_class) {
             case 'login':       // 登录
                 $query['TemplateCode'] = 'SMS_181196339';
-                $query['TemplateParam'] = $code;
+                $query['TemplateParam'] = json_encode(['code'=>$code]);
                 break;
             case 'retrieve_password':       // 找回密码
                 break;
@@ -62,13 +62,34 @@ class CommonService {
                     'query' => $query,
                 ])
                 ->request();
-            print_r($result->toArray());
+            if ($result->get('Message') == 'OK' && $result->get('Code') == 'OK') {
+                return true;
+            } else {
+                throw new InternalException(5000, $result->get('Message'));
+            }
         } catch (ClientException $e) {
 //            echo $e->getErrorMessage() . PHP_EOL;
             throw new InternalException(5000, $e->getErrorMessage());
         } catch (ServerException $e) {
 //            echo $e->getErrorMessage() . PHP_EOL;
             throw new InternalException(5000, $e->getErrorMessage());
+        }
+    }
+
+
+    public function PhoneVerifyCode(string $phone, string $verify_code, string $verify_code_class)
+    {
+        if ( $SmsVerifyCode = SmsVerifyCode::where([
+            'phone'=>$phone,
+            'verify_code'=>$verify_code,
+            'verify_type'=>$verify_code_class,
+//            'verify_time'=>['not',0],
+        ])->first() ) {
+            $SmsVerifyCode->verify_time = time();
+            $SmsVerifyCode->save();
+            return true;
+        } else {
+            return false;
         }
     }
 }

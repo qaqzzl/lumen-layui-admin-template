@@ -222,6 +222,7 @@ create table if not exists `user_member`(
     `signature` varchar(64) not null default '' comment '个性签名',
     `city` char(50) not null default '' comment '城市',
     `province` char(50) not null default '' comment '省份',
+    `password` varchar(250) not null default '' comment '密码',
     `created_at` int not null default 0 comment '添加时间',
     `updated_at` int not null default 0 comment '修改时间',
     `deleted_at` int not null default 0 comment '删除时间',
@@ -244,12 +245,21 @@ create table if not exists `user_auths_token`(
     `id` int unsigned auto_increment primary key,
     `member_id` int not null comment '会员ID',
     `token` varchar(255) not null default '' comment 'token',
-    `client` char(20) not null comment 'app,web,wechat_applet',
+    `client` char(20) not null comment 'app,web,wechat_applet,wechat_',
     `last_time` int not null comment '上次刷新时间',
     `status` tinyint(1) not null default 0 comment '1-其他设备强制下线',
     `created_at` int not null default 0 comment '添加时间',
     UNIQUE KEY `token` (`token`)
 )engine=innodb default charset=utf8 comment '用户授权 token 表';
+
+-- 用户邀请关系表
+create table if not exists `user_invite`(
+    `id` int unsigned auto_increment primary key,
+    `member_id` int not null comment '会员ID',
+    `p_member_id` int not null comment '上级会员ID',
+    `pid` int not null comment 'PID',
+    `path` text not null default '' comment '路径'
+)engine=innodb default charset=utf8 comment '用户邀请关系表';
 
 
 -- ****************************

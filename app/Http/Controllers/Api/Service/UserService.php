@@ -55,7 +55,6 @@ class UserService {
         DB::beginTransaction();
         // 创建会员基础表
         if (empty($member['nickname'])) $member['nickname'] = '会员 - '.mt_rand(100000,999999);
-        $member['invite_code'] = mt_rand(100000,999999);
         if (! $UserMember = UserMember::create($member) ) {
             DB::rollBack();
             throw new InternalException();
@@ -66,13 +65,42 @@ class UserService {
             DB::rollBack();
             throw new InternalException();
         }
-        // 创建会员钱包
-        if (! UserWallet::create(['member_id'=>$UserMember->member_id]) ) {
-            DB::rollBack();
-            throw new InternalException();
-        }
         DB::commit();
         return $UserMember;
+    }
+
+    // login
+    public function Login($identifier, $identity_type, $user_data = [], $invite_code='')
+    {
+        if (!$UserAuths = UserAuths::where(['identifier' => $identifier, 'identity_type' => $identity_type])->first()) {
+            //注册
+            $UserMember = $this->CreateUser($user_data, [
+                'identifier' => $identifier,
+                'identity_type' => $identity_type,
+            ]);
+            $member_id = $UserMember->member_id;
+        } else {
+            $member_id = $UserAuths->member_id;
+        }
+
+        //生成用户token
+        $user_client_type = 'app';
+        $UserAuthsToken = $this->RefreshToken($member_id, $user_client_type);
+
+        $auth = ['access_token' => $UserAuthsToken->token, 'user_id' => $member_id, 'client' => $user_client_type, 'expires_time' => $UserAuthsToken->last_time + 2592000];
+        // 查询用户绑定信息
+        if ($this->IsBindingInviteCode($member_id) == 'no' && $invite_code != '') {
+            // 执行绑定邀请码逻辑
+            //$this->BindInviteCode($member_id, $invite_code);
+        }
+
+        // 查询会员基本信息
+        $UserMember = $this->MemberInfo($member_id);
+
+        return [
+            'auth'=>$auth,
+            'member_info'=>$UserMember
+        ];
     }
 
     /**
@@ -94,9 +122,9 @@ class UserService {
      */
     public function IsBindingInviteCode($user_id)
     {
-        if ( UserInvite::where('id',$user_id)->count() ) {
-            return 'yes';
-        }
+//        if ( UserInvite::where('id',$user_id)->count() ) {
+//            return 'yes';
+//        }
         return 'no';
     }
 
